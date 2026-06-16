@@ -18,13 +18,13 @@ export default function LoginPage() {
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [signupSent, setSignupSent] = useState(false);
+  const [signupDone, setSignupDone] = useState(false);
 
   useEffect(() => {
     if (!authLoading && user) navigate('/', { replace: true });
   }, [user, authLoading, navigate]);
 
-  function switchTab(t: Tab) { setTab(t); setError(''); setSignupSent(false); }
+  function switchTab(t: Tab) { setTab(t); setError(''); setSignupDone(false); }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -39,9 +39,8 @@ export default function LoginPage() {
         await signIn(email.trim(), password);
         navigate('/', { replace: true });
       } else {
-        const data = await signUp(email.trim(), password);
-        if (data.session) navigate('/', { replace: true });
-        else setSignupSent(true);
+        await signUp(email.trim(), password);
+        setSignupDone(true);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.');
@@ -58,20 +57,20 @@ export default function LoginPage() {
     );
   }
 
-  if (signupSent) {
+  if (signupDone) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-4">
         <div className="w-full max-w-sm text-center space-y-4">
-          <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center mx-auto">
-            <Mail className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
+          <div className="w-16 h-16 bg-violet-100 dark:bg-violet-900/30 rounded-2xl flex items-center justify-center mx-auto">
+            <Film className="w-8 h-8 text-violet-600 dark:text-violet-400" />
           </div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">이메일을 확인하세요</h2>
+          <h2 className="text-xl font-bold text-slate-900 dark:text-white">회원가입 완료!</h2>
           <p className="text-sm text-slate-600 dark:text-slate-400">
-            <strong>{email}</strong> 으로 가입 확인 이메일을 보냈습니다.
+            <strong>{email}</strong> 으로 가입이 완료되었습니다.
           </p>
-          <button type="button" onClick={() => { setSignupSent(false); switchTab('login'); }}
-            className="text-sm font-medium text-violet-600 dark:text-violet-400 hover:underline">
-            로그인 화면으로 돌아가기
+          <button type="button" onClick={() => { setSignupDone(false); switchTab('login'); }}
+            className="w-full py-3 rounded-xl bg-violet-600 hover:bg-violet-700 text-white text-sm font-semibold transition-colors">
+            로그인하러 가기
           </button>
         </div>
       </div>
