@@ -1,0 +1,44 @@
+
+> party-shorts-studio@0.1.0 dev
+> vite
+
+Re-optimizing dependencies because vite config has changed
+Port 5173 is in use, trying another one...
+
+  [32m[1mVITE[22m v5.4.21[39m  [2mready in [0m[1m2682[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5174[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[2m11:52:47 PM[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mindex.html[22m
+[2m11:52:54 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/steps/ExportStep.tsx, /src/index.css[22m
+[2m11:53:00 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/Settings.tsx, /src/components/steps/IdeaStep.tsx, /src/components/steps/UploadCopyStep.tsx, /src/components/steps/HookStep.tsx, /src/components/steps/ScriptSplitStep.tsx, /src/components/steps/SlidesStep.tsx[22m
+[2m11:53:07 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/Settings.tsx, /src/components/steps/IdeaStep.tsx, /src/components/steps/UploadCopyStep.tsx, /src/components/steps/HookStep.tsx, /src/components/steps/ScriptSplitStep.tsx, /src/components/steps/SlidesStep.tsx[22m
+[2m11:57:27 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/store/AuthContext.tsx, /src/index.css, /src/store/AppContext.tsx, /src/pages/Wizard.tsx, /src/components/layout/ProjectDrawer.tsx, /src/pages/LoginPage.tsx, /src/components/layout/Header.tsx[22m
+[2m11:57:27 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/LoginPage.tsx, /src/components/layout/Header.tsx[22m
+[2m11:57:27 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/store/AppContext.tsx, /src/index.css, /src/pages/Wizard.tsx, /src/components/layout/ProjectDrawer.tsx[22m
+[2m11:57:27 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/store/AuthContext.tsx, /src/index.css[22m
+[2m11:57:27 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/LoginPage.tsx, /src/index.css[22m
+[2m11:57:27 PM[22m [31m[1m[vite][22m[39m Pre-transform error: Failed to load url /src/services/db.service.ts (resolved id: E:/project/ShortMaker/PartyShort/src/services/db.service.ts) in E:/project/ShortMaker/PartyShort/src/store/AppContext.tsx. Does the file exist?
+[2m11:57:27 PM[22m [31m[1m[vite][22m[39m Pre-transform error: Failed to load url /src/store/AuthContext.tsx (resolved id: E:/project/ShortMaker/PartyShort/src/store/AuthContext.tsx) in E:/project/ShortMaker/PartyShort/src/main.tsx. Does the file exist?
+[2m11:57:27 PM[22m [31m[1m[vite][22m[39m Pre-transform error: Failed to load url /src/services/db.service.ts (resolved id: E:/project/ShortMaker/PartyShort/src/services/db.service.ts) in E:/project/ShortMaker/PartyShort/src/store/AppContext.tsx. Does the file exist?
+[2m11:57:27 PM[22m [31m[1m[vite][22m[39m Pre-transform error: Failed to load url /src/services/db.service.ts (resolved id: E:/project/ShortMaker/PartyShort/src/services/db.service.ts) in E:/project/ShortMaker/PartyShort/src/store/AppContext.tsx. Does the file exist?
+[2m11:57:27 PM[22m [31m[1m[vite][22m[39m Pre-transform error: Failed to load url /src/store/AuthContext.tsx (resolved id: E:/project/ShortMaker/PartyShort/src/store/AuthContext.tsx) in E:/project/ShortMaker/PartyShort/src/main.tsx. Does the file exist?
+[2m11:57:27 PM[22m [31m[1m[vite][22m[39m Pre-transform error: Failed to load url /src/services/auth.service.ts (resolved id: E:/project/ShortMaker/PartyShort/src/services/auth.service.ts) in E:/project/ShortMaker/PartyShort/src/components/layout/Header.tsx. Does the file exist?
+[2m11:57:52 PM[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/main.tsx[22m
+[2m11:57:53 PM[22m [31m[1m[vite][22m[39m Pre-transform error: Failed to load url /src/pages/LoginPage.tsx (resolved id: E:/project/ShortMaker/PartyShort/src/pages/LoginPage.tsx) in E:/project/ShortMaker/PartyShort/src/App.tsx. Does the file exist?
+[2m11:57:53 PM[22m [31m[1m[vite][22m[39m Pre-transform error: Failed to load url /src/store/AuthContext.tsx (resolved id: E:/project/ShortMaker/PartyShort/src/store/AuthContext.tsx) in E:/project/ShortMaker/PartyShort/src/App.tsx. Does the file exist?
+[2m11:57:53 PM[22m [31m[1m[vite][22m[39m Pre-transform error: Failed to load url /src/store/AuthContext.tsx (resolved id: E:/project/ShortMaker/PartyShort/src/store/AuthContext.tsx) in E:/project/ShortMaker/PartyShort/src/App.tsx. Does the file exist?
+[2m11:58:25 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+[2m11:59:03 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/store/AppContext.tsx, /src/index.css[22m
+[2m11:59:29 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/layout/Header.tsx, /src/index.css[22m
+[2m12:00:21 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Settings.tsx, /src/index.css[22m
+[2m12:01:24 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/layout/ProjectDrawer.tsx, /src/index.css[22m
+[2m12:01:40 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/Wizard.tsx, /src/index.css[22m
+[2m12:05:59 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/Wizard.tsx, /src/components/layout/WizardProgress.tsx, /src/components/steps/PlanningStep.tsx[22m
+[2m12:06:08 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/steps/UploadCopyStep.tsx, /src/index.css[22m
+[2m12:06:26 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/steps/UploadCopyStep.tsx, /src/index.css[22m
+[2m12:06:36 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/components/steps/UploadCopyStep.tsx, /src/index.css[22m
+[2m12:06:52 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/steps/IdeaStep.tsx, /src/components/steps/PlanningStep.tsx, /src/components/steps/UploadCopyStep.tsx, /src/components/steps/HookStep.tsx, /src/components/steps/SlidesStep.tsx, /src/components/steps/VeoClipStep.tsx, /src/components/steps/ScriptSplitStep.tsx[22m
+[2m12:07:00 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/Settings.tsx, /src/components/steps/IdeaStep.tsx, /src/components/steps/UploadCopyStep.tsx, /src/components/steps/HookStep.tsx, /src/components/steps/ScriptSplitStep.tsx, /src/components/steps/SlidesStep.tsx[22m
+[2m12:07:08 AM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/Settings.tsx, /src/components/steps/IdeaStep.tsx, /src/components/steps/UploadCopyStep.tsx, /src/components/steps/HookStep.tsx, /src/components/steps/ScriptSplitStep.tsx, /src/components/steps/SlidesStep.tsx[22m
