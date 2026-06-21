@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Film, Mail, Lock, Eye, EyeOff, Loader2, AlertCircle, ChevronDown } from 'lucide-react';
-import { signIn, signUp, signInWithGoogle, signInWithKakao, signInWithApple } from '../services/auth.service';
+import { signIn, signUp, signInWithGoogle, signInWithKakao } from '../services/auth.service';
 import { useAuth } from '../store/AuthContext';
 import Button from '../components/ui/Button';
 
@@ -26,21 +26,6 @@ function KakaoIcon() {
   );
 }
 
-function NaverIcon() {
-  return (
-    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="white">
-      <path d="M16.273 12.845L7.376 0H0v24h7.727V11.155L16.624 24H24V0h-7.727z"/>
-    </svg>
-  );
-}
-
-function AppleIcon() {
-  return (
-    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.7 9.05 7.42c1.32.07 2.23.7 3.07.72.95-.17 1.86-.82 2.87-.76 1.23.08 2.15.58 2.76 1.47-2.51 1.54-1.92 4.94.49 5.9-.57 1.56-1.31 3.1-2.19 5.53zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
-    </svg>
-  );
-}
 
 export default function LoginPage() {
   const { user, authLoading } = useAuth();
@@ -65,13 +50,12 @@ export default function LoginPage() {
 
   function switchEmailTab(t: EmailTab) { setEmailTab(t); setError(''); }
 
-  async function handleOAuth(provider: 'google' | 'kakao' | 'apple') {
+  async function handleOAuth(provider: 'google' | 'kakao') {
     setError('');
     setOauthLoading(provider);
     try {
       if (provider === 'google') await signInWithGoogle();
-      else if (provider === 'kakao') await signInWithKakao();
-      else await signInWithApple();
+      else await signInWithKakao();
     } catch (err) {
       setError(err instanceof Error ? err.message : '로그인 중 오류가 발생했습니다.');
       setOauthLoading(null);
@@ -173,26 +157,6 @@ export default function LoginPage() {
         >
           {oauthLoading === 'kakao' ? <Loader2 className="w-5 h-5 animate-spin" /> : <KakaoIcon />}
           <span className="flex-1 text-center">카카오로 로그인</span>
-        </button>
-
-        {/* Naver */}
-        <button
-          disabled
-          className="w-full flex items-center gap-3 px-4 py-3.5 bg-[#03C75A] rounded-2xl font-medium text-white text-sm shadow-sm opacity-40 cursor-not-allowed"
-        >
-          <NaverIcon />
-          <span className="flex-1 text-center">네이버로 로그인</span>
-          <span className="text-[10px] bg-white/20 px-1.5 py-0.5 rounded-full">준비 중</span>
-        </button>
-
-        {/* Apple */}
-        <button
-          onClick={() => handleOAuth('apple')}
-          disabled={!!oauthLoading}
-          className="w-full flex items-center gap-3 px-4 py-3.5 bg-black hover:bg-slate-900 rounded-2xl transition-colors font-medium text-white text-sm shadow-sm disabled:opacity-60"
-        >
-          {oauthLoading === 'apple' ? <Loader2 className="w-5 h-5 animate-spin" /> : <AppleIcon />}
-          <span className="flex-1 text-center">Apple로 로그인</span>
         </button>
 
         {/* Divider */}
