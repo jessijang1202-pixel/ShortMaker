@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import { Zap, Image, Download, Settings, ChevronRight, CheckCircle, Sparkles, Video, Layout, TrendingUp } from 'lucide-react';
+import { Zap, Image, Download, Settings, ChevronRight, CheckCircle, Sparkles, Video, Layout, TrendingUp, Wand2, Clapperboard } from 'lucide-react';
 import { useApp } from '../store/AppContext';
+import { useAuth } from '../store/AuthContext';
 import Button from '../components/ui/Button';
 
 const FEATURES = [
@@ -39,16 +40,21 @@ const CATEGORIES_PREVIEW = [
 export default function Home() {
   const navigate = useNavigate();
   const { settings, resetSession } = useApp();
+  const { user } = useAuth();
 
-  function handleStart() {
-    resetSession();
-    navigate('/wizard');
+  function handleModeClick() {
+    if (user) {
+      resetSession();
+      navigate('/wizard');
+    } else {
+      navigate('/login', { state: { from: '/wizard' } });
+    }
   }
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
       {/* Hero */}
-      <div className="text-center mb-12">
+      <div className="text-center mb-10">
         <div className="inline-flex items-center gap-2 bg-violet-100 dark:bg-violet-950/50 text-violet-700 dark:text-violet-300 text-sm font-medium px-4 py-1.5 rounded-full mb-6">
           <Sparkles className="w-3.5 h-3.5" />
           Gemini API · Veo 3.1 Lite · Imagen 3
@@ -64,15 +70,6 @@ export default function Home() {
           아이디어부터 업로드 카피까지 10단계로 숏폼 영상을 뚝딱 만들어보세요.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-3 justify-center mt-8">
-          <Button size="lg" rightIcon={<ChevronRight className="w-5 h-5" />} onClick={handleStart}>
-            영상 제작 시작하기
-          </Button>
-          <Button size="lg" variant="secondary" leftIcon={<Settings className="w-4 h-4" />} onClick={() => navigate('/settings')}>
-            API 키 설정
-          </Button>
-        </div>
-
         <div className="mt-4">
           {settings.useMockMode ? (
             <span className="inline-flex items-center gap-1.5 text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 px-3 py-1 rounded-full border border-amber-200 dark:border-amber-800">
@@ -86,6 +83,58 @@ export default function Home() {
             </span>
           )}
         </div>
+      </div>
+
+      {/* Mode Selection Cards */}
+      <div className="grid sm:grid-cols-2 gap-4 mb-10">
+        {/* 간단 영상 만들기 */}
+        <button
+          onClick={handleModeClick}
+          className="group text-left wizard-card border-2 border-transparent hover:border-emerald-400 dark:hover:border-emerald-500 hover:shadow-lg transition-all duration-200 cursor-pointer"
+        >
+          <div className="flex items-start gap-4">
+            <div className="shrink-0 w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+              <Wand2 className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between">
+                <h3 className="font-bold text-slate-900 dark:text-white text-base">간단 영상 만들기</h3>
+                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all" />
+              </div>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
+                클릭 몇 번으로 30초 숏폼 영상 제작 가능
+              </p>
+            </div>
+          </div>
+        </button>
+
+        {/* 고급 영상 만들기 */}
+        <button
+          onClick={handleModeClick}
+          className="group text-left wizard-card border-2 border-transparent hover:border-violet-400 dark:hover:border-violet-500 hover:shadow-lg transition-all duration-200 cursor-pointer"
+        >
+          <div className="flex items-start gap-4">
+            <div className="shrink-0 w-12 h-12 rounded-2xl bg-violet-100 dark:bg-violet-900/40 flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+              <Clapperboard className="w-6 h-6 text-violet-600 dark:text-violet-400" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between">
+                <h3 className="font-bold text-slate-900 dark:text-white text-base">고급 영상 만들기</h3>
+                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-violet-500 group-hover:translate-x-0.5 transition-all" />
+              </div>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
+                동영상, 이미지, 자막, 목소리 등 맞춤 제작 가능
+              </p>
+            </div>
+          </div>
+        </button>
+      </div>
+
+      {/* Settings shortcut */}
+      <div className="flex justify-center mb-10">
+        <Button size="sm" variant="secondary" leftIcon={<Settings className="w-4 h-4" />} onClick={() => navigate('/settings')}>
+          API 키 설정
+        </Button>
       </div>
 
       {/* Category chips */}
@@ -153,7 +202,7 @@ export default function Home() {
             <div><span className="font-medium text-slate-800 dark:text-slate-200">말투:</span> 친근한, 유쾌한</div>
           </div>
         </div>
-        <Button variant="primary" className="mt-4 w-full sm:w-auto" onClick={handleStart}>
+        <Button variant="primary" className="mt-4 w-full sm:w-auto" onClick={handleModeClick}>
           데모로 바로 시작하기
         </Button>
       </div>

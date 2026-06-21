@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Film, Mail, Lock, Eye, EyeOff, Loader2, AlertCircle } from 'lucide-react';
 import { signIn, signUp } from '../services/auth.service';
 import { useAuth } from '../store/AuthContext';
@@ -10,6 +10,8 @@ type Tab = 'login' | 'signup';
 export default function LoginPage() {
   const { user, authLoading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = (location.state as { from?: string })?.from ?? '/wizard';
 
   const [tab, setTab] = useState<Tab>('login');
   const [email, setEmail] = useState('');
@@ -21,8 +23,8 @@ export default function LoginPage() {
   const [signupDone, setSignupDone] = useState(false);
 
   useEffect(() => {
-    if (!authLoading && user) navigate('/', { replace: true });
-  }, [user, authLoading, navigate]);
+    if (!authLoading && user) navigate(from, { replace: true });
+  }, [user, authLoading, navigate, from]);
 
   function switchTab(t: Tab) { setTab(t); setError(''); setSignupDone(false); }
 
@@ -37,7 +39,7 @@ export default function LoginPage() {
     try {
       if (tab === 'login') {
         await signIn(email.trim(), password);
-        navigate('/', { replace: true });
+        navigate(from, { replace: true });
       } else {
         await signUp(email.trim(), password);
         setSignupDone(true);

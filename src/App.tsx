@@ -16,7 +16,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
       </div>
     );
   }
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) return <Navigate to="/login" state={{ from: '/wizard' }} replace />;
   return <>{children}</>;
 }
 
@@ -24,10 +24,10 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
-      <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
+      <Route element={<AppLayout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/wizard" element={<Wizard />} />
-        <Route path="/settings" element={<Settings />} />
+        <Route path="/wizard" element={<ProtectedRoute><Wizard /></ProtectedRoute>} />
+        <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
