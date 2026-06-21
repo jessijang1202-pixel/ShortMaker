@@ -8,7 +8,10 @@ export async function signInWithGoogle() {
 }
 
 export async function signInWithKakao() {
-  const { error } = await supabase.auth.signInWithOAuth({ provider: 'kakao', options: { redirectTo: REDIRECT } });
+  const { error } = await supabase.auth.signInWithOAuth({
+    provider: 'kakao',
+    options: { redirectTo: REDIRECT, scopes: 'profile_nickname' },
+  });
   if (error) throw new Error(error.message);
 }
 
