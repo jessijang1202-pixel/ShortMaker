@@ -4,21 +4,46 @@ import { useApp } from '../../store/AppContext';
 import Button from '../ui/Button';
 import Alert from '../ui/Alert';
 
-function downloadDataUrl(dataUrl: string, filename: string) {
+function triggerDownload(url: string, filename: string) {
   const a = document.createElement('a');
-  a.href = dataUrl;
+  a.href = url;
   a.download = filename;
+  a.style.display = 'none';
+  document.body.appendChild(a);
   a.click();
+  setTimeout(() => document.body.removeChild(a), 200);
+}
+
+function downloadBlob(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  triggerDownload(url, filename);
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+}
+
+function downloadDataUrl(dataUrl: string, filename: string) {
+  if (dataUrl.startsWith('blob:')) {
+    triggerDownload(dataUrl, filename);
+    return;
+  }
+  // data: URI → convert to Blob for reliable large-file downloads
+  try {
+    const [header, b64] = dataUrl.split(',');
+    const mime = header.match(/:(.*?);/)?.[1] ?? 'application/octet-stream';
+    const bytes = atob(b64);
+    const arr = new Uint8Array(bytes.length);
+    for (let i = 0; i < bytes.length; i++) arr[i] = bytes.charCodeAt(i);
+    downloadBlob(new Blob([arr], { type: mime }), filename);
+  } catch {
+    triggerDownload(dataUrl, filename);
+  }
 }
 
 function downloadText(text: string, filename: string) {
-  const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-  downloadDataUrl(URL.createObjectURL(blob), filename);
+  downloadBlob(new Blob([text], { type: 'text/plain;charset=utf-8' }), filename);
 }
 
 function downloadJson(obj: unknown, filename: string) {
-  const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
-  downloadDataUrl(URL.createObjectURL(blob), filename);
+  downloadBlob(new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' }), filename);
 }
 
 interface CopyBtnProps { text: string; label: string }
