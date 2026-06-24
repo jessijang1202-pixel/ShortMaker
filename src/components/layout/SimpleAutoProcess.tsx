@@ -39,7 +39,8 @@ interface Props {
 export default function SimpleAutoProcess({ onError }: Props) {
   const {
     session, settings,
-    setHooks, selectHook, setScriptSplit, setSubtitleNarration, setStep,
+    setHooks, selectHook, setScriptSplit, updateVeoClip, updateSlideScene,
+    setSubtitleNarration, setStep, preUploadedAssets,
   } = useApp();
 
   const [statuses, setStatuses] = useState<TaskStatus[]>(TASKS.map(() => 'pending'));
@@ -86,15 +87,26 @@ export default function SimpleAutoProcess({ onError }: Props) {
         mark(1, 'done');
         await pause(400);
 
-        // ── Step 5: Veo 클립 (scriptSplit 내 veo_core_clip 사용) ──────────
+        // ── Step 5: Veo 클립 — 업로드 영상 있으면 적용 ───────────────────
         mark(2, 'running');
-        await pause(900);
+        await pause(600);
+        if (preUploadedAssets.videoUrl) {
+          updateVeoClip({
+            ...split.veo_core_clip,
+            videoUrl: preUploadedAssets.videoUrl,
+            status: 'done',
+          });
+        }
         mark(2, 'done');
         await pause(400);
 
-        // ── Step 6: 슬라이드 (scriptSplit 내 slide_scenes 사용) ──────────
+        // ── Step 6: 슬라이드 — 업로드 사진 있으면 순서대로 적용 ──────────
         mark(3, 'running');
-        await pause(700);
+        await pause(500);
+        preUploadedAssets.photoUrls.forEach((photoUrl, i) => {
+          const scene = split.slide_scenes[i];
+          if (scene) updateSlideScene({ ...scene, imageUrl: photoUrl, imageStatus: 'done' });
+        });
         mark(3, 'done');
         await pause(400);
 

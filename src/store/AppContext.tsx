@@ -16,6 +16,11 @@ const initialSession: AppSession = {
 
 const defaultSettings: UserApiSettings = { geminiApiKey: '', useMockMode: true };
 
+export interface PreUploadedAssets {
+  videoUrl?: string;
+  photoUrls: string[];
+}
+
 interface AppContextType {
   session: AppSession;
   settings: UserApiSettings;
@@ -23,6 +28,8 @@ interface AppContextType {
   currentProjectId: string | null;
   videoMode: 'simple' | 'advanced';
   setVideoMode: (mode: 'simple' | 'advanced') => void;
+  preUploadedAssets: PreUploadedAssets;
+  setPreUploadedAssets: (assets: PreUploadedAssets) => void;
   setSettings: (s: UserApiSettings) => void;
   toggleDark: () => void;
   setStep: (step: WizardStep) => void;
@@ -68,9 +75,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const userRef = useRef<User | null>(null);
 
-  const [session, setSession]         = useState<AppSession>(initialSession);
-  const [settings, setSettingsState]  = useState<UserApiSettings>(loadSettings);
-  const [videoMode, setVideoMode]     = useState<'simple' | 'advanced'>('advanced');
+  const [session, setSession]             = useState<AppSession>(initialSession);
+  const [settings, setSettingsState]      = useState<UserApiSettings>(loadSettings);
+  const [videoMode, setVideoMode]         = useState<'simple' | 'advanced'>('advanced');
+  const [preUploadedAssets, setPreUploadedAssets] = useState<PreUploadedAssets>({ photoUrls: [] });
   const [isDark, setIsDark]           = useState<boolean>(() => {
     const d = getInitialDark();
     if (d) document.documentElement.classList.add('dark');
@@ -170,12 +178,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const resetSession = useCallback(() => {
     setSession(initialSession);
     setCurrentProjectId(null);
+    setPreUploadedAssets({ photoUrls: [] });
   }, []);
 
   return (
     <AppContext.Provider value={{
       session, settings, isDark, currentProjectId,
       videoMode, setVideoMode,
+      preUploadedAssets, setPreUploadedAssets,
       setSettings, toggleDark, setStep,
       updatePlanning, setIdeas, selectIdea,
       setHooks, selectHook, setScriptSplit,
