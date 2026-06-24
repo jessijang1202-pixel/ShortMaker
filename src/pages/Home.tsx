@@ -39,10 +39,11 @@ const CATEGORIES_PREVIEW = [
 
 export default function Home() {
   const navigate = useNavigate();
-  const { settings, resetSession } = useApp();
+  const { settings, resetSession, setVideoMode } = useApp();
   const { user } = useAuth();
 
-  function handleModeClick() {
+  function handleModeClick(mode: 'simple' | 'advanced') {
+    setVideoMode(mode);
     if (user) {
       resetSession();
       navigate('/wizard');
@@ -89,7 +90,7 @@ export default function Home() {
       <div className="grid sm:grid-cols-2 gap-4 mb-10">
         {/* 간단 영상 만들기 */}
         <button
-          onClick={handleModeClick}
+          onClick={() => handleModeClick('simple')}
           className="group text-left wizard-card border-2 border-transparent hover:border-emerald-400 dark:hover:border-emerald-500 hover:shadow-lg transition-all duration-200 cursor-pointer"
         >
           <div className="flex items-start gap-4">
@@ -110,7 +111,7 @@ export default function Home() {
 
         {/* 고급 영상 만들기 */}
         <button
-          onClick={handleModeClick}
+          onClick={() => handleModeClick('advanced')}
           className="group text-left wizard-card border-2 border-transparent hover:border-violet-400 dark:hover:border-violet-500 hover:shadow-lg transition-all duration-200 cursor-pointer"
         >
           <div className="flex items-start gap-4">
@@ -202,7 +203,7 @@ export default function Home() {
             <div><span className="font-medium text-slate-800 dark:text-slate-200">말투:</span> 친근한, 유쾌한</div>
           </div>
         </div>
-        <Button variant="primary" className="mt-4 w-full sm:w-auto" onClick={handleModeClick}>
+        <Button variant="primary" className="mt-4 w-full sm:w-auto" onClick={() => handleModeClick('simple')}>
           데모로 바로 시작하기
         </Button>
       </div>

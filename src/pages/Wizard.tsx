@@ -5,6 +5,7 @@ import { useApp } from '../store/AppContext';
 import { WIZARD_STEPS, type WizardStep } from '../types';
 import { WizardSidebar, WizardTopBar } from '../components/layout/WizardProgress';
 import ProjectDrawer from '../components/layout/ProjectDrawer';
+import SimpleAutoProcess from '../components/layout/SimpleAutoProcess';
 import PlanningStep from '../components/steps/PlanningStep';
 import IdeaStep from '../components/steps/IdeaStep';
 import HookStep from '../components/steps/HookStep';
@@ -17,6 +18,10 @@ import UploadCopyStep from '../components/steps/UploadCopyStep';
 import ExportStep from '../components/steps/ExportStep';
 import Alert from '../components/ui/Alert';
 import { saveProject } from '../services/db.service';
+
+const SIMPLE_AUTO_STEPS = new Set<WizardStep>([
+  'hooks', 'script-split', 'veo-clip', 'slides', 'subtitle-narration',
+]);
 
 const STEP_COMPONENTS: Record<WizardStep, React.ComponentType> = {
   'planning':           PlanningStep,
@@ -39,15 +44,17 @@ function getCompletedSteps(currentStep: WizardStep): WizardStep[] {
 type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 
 export default function Wizard() {
-  const { session, settings, setStep, currentProjectId, setCurrentProjectId, loadProjectSession, resetSession } = useApp();
+  const { session, settings, setStep, currentProjectId, setCurrentProjectId, loadProjectSession, resetSession, videoMode } = useApp();
   const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
+  const [autoError, setAutoError] = useState('');
 
   const currentStep = session.currentStep;
   const completed = getCompletedSteps(currentStep);
   const StepComponent = STEP_COMPONENTS[currentStep];
   const canSave = !!session.planning;
+  const showAutoProcess = videoMode === 'simple' && SIMPLE_AUTO_STEPS.has(currentStep);
 
   async function handleSave() {
     if (!canSave) return;
@@ -114,10 +121,21 @@ export default function Wizard() {
         <div className="flex gap-8">
           <WizardSidebar currentStep={currentStep} completedSteps={completed} onStepClick={setStep} />
           <div className="flex-1 min-w-0 max-w-3xl">
+            {autoError && (
+              <Alert variant="error" onClose={() => { setAutoError(''); setStep('ideas'); }}>
+                자동 제작 중 오류: {autoError} — 아이디어 선택 단계로 돌아갑니다.
+              </Alert>
+            )}
             <StepComponent />
           </div>
         </div>
       </div>
+
+      {showAutoProcess && (
+        <SimpleAutoProcess
+          onError={msg => { setAutoError(msg); setStep('ideas'); }}
+        />
+      )}
 
       <ProjectDrawer
         open={drawerOpen}

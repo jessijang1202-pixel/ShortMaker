@@ -10,7 +10,7 @@ import { generateIdeas } from '../../services/gemini.service';
 import { mockGenerateIdeas } from '../../services/mock.service';
 
 export default function IdeaStep() {
-  const { session, settings, setIdeas, selectIdea, setStep } = useApp();
+  const { session, settings, setIdeas, selectIdea, setStep, videoMode } = useApp();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -125,7 +125,9 @@ export default function IdeaStep() {
 
       <div className="flex justify-between pt-2">
         <Button variant="secondary" leftIcon={<ChevronLeft className="w-4 h-4" />} onClick={() => setStep('planning')}>이전</Button>
-        <Button rightIcon={<ChevronRight className="w-4 h-4" />} onClick={handleNext} disabled={!session.selectedIdea}>훅 생성하기</Button>
+        <Button rightIcon={<ChevronRight className="w-4 h-4" />} onClick={handleNext} disabled={!session.selectedIdea}>
+          {videoMode === 'simple' ? '자동 제작 시작' : '훅 생성하기'}
+        </Button>
       </div>
     </div>
   );

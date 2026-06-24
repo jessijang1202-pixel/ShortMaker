@@ -21,6 +21,8 @@ interface AppContextType {
   settings: UserApiSettings;
   isDark: boolean;
   currentProjectId: string | null;
+  videoMode: 'simple' | 'advanced';
+  setVideoMode: (mode: 'simple' | 'advanced') => void;
   setSettings: (s: UserApiSettings) => void;
   toggleDark: () => void;
   setStep: (step: WizardStep) => void;
@@ -68,6 +70,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const [session, setSession]         = useState<AppSession>(initialSession);
   const [settings, setSettingsState]  = useState<UserApiSettings>(loadSettings);
+  const [videoMode, setVideoMode]     = useState<'simple' | 'advanced'>('advanced');
   const [isDark, setIsDark]           = useState<boolean>(() => {
     const d = getInitialDark();
     if (d) document.documentElement.classList.add('dark');
@@ -172,6 +175,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   return (
     <AppContext.Provider value={{
       session, settings, isDark, currentProjectId,
+      videoMode, setVideoMode,
       setSettings, toggleDark, setStep,
       updatePlanning, setIdeas, selectIdea,
       setHooks, selectHook, setScriptSplit,
