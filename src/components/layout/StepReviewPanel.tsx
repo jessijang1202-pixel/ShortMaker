@@ -65,6 +65,7 @@ const CONFIGS: Partial<Record<WizardStep, ReviewConfig>> = {
     stepNo: 6, stepTitle: '비주얼 소스 선정',
     checks: [
       { id: 'source_rights', label: '각 씬 이미지 소스가 저작권 문제 없이 확보 가능한가?' },
+      { id: 'ref_color',     label: '이미지 색감이 레퍼런스(또는 트렌드) 스타일과 어울리는가?' },
     ],
     confirmPrompt: '슬라이드 이미지와 텍스트 구성이 만족스러운가요?',
     canRegenerate: true,
@@ -82,6 +83,7 @@ const CONFIGS: Partial<Record<WizardStep, ReviewConfig>> = {
     stepNo: 8, stepTitle: '스타일(폰트/컬러) 적용',
     checks: [
       { id: 'brand_preset', label: '폰트/컬러/자막 스타일이 지정된 프리셋과 일치하는가?' },
+      { id: 'ref_match',    label: '전체 무드가 레퍼런스(또는 트렌드) 스타일과 일치하는가?' },
     ],
     confirmPrompt: '전체 스토리보드와 스타일이 마음에 드나요?',
     canRegenerate: false,
@@ -90,6 +92,7 @@ const CONFIGS: Partial<Record<WizardStep, ReviewConfig>> = {
     stepNo: 9, stepTitle: 'BGM/효과음 적용',
     checks: [
       { id: 'bgm_mood', label: '음악 분위기가 콘텐츠 키와 맞는가?' },
+      { id: 'bgm_ref',  label: 'BGM/효과음이 레퍼런스(또는 트렌드) 분위기와 비슷한가?' },
       { id: 'bgm_key',  label: '이전 영상들과 키가 급격히 다르지 않은가?' },
     ],
     confirmPrompt: '업로드 카피와 해시태그가 플랫폼에 맞게 준비되었나요?',

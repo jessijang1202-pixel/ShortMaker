@@ -11,13 +11,14 @@ import Alert from '../ui/Alert';
 import { buildSlideImagePrompt } from '../../prompts';
 import { generateSlideImage } from '../../services/imagen.service';
 import { mockGenerateSlideImage } from '../../services/mock.service';
+import { TREND_DEFAULT_STYLE } from '../../services/reference.service';
 
 function isVideoUrl(url: string) {
   return url.startsWith('data:video/') || url.startsWith('blob:') && url.includes('video');
 }
 
 export default function SlidesStep() {
-  const { session, settings, updateSlideScene, setStep } = useApp();
+  const { session, settings, updateSlideScene, setStep, reference } = useApp();
   const [error, setError] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editTexts, setEditTexts] = useState<Record<string, string>>({});
@@ -30,7 +31,7 @@ export default function SlidesStep() {
   async function generateImage(scene: SlideScene) {
     updateSlideScene({ ...scene, imageStatus: 'generating', imageUrl: undefined });
     try {
-      const prompt = buildSlideImagePrompt(scene, idea!);
+      const prompt = buildSlideImagePrompt(scene, idea!, reference.analysis ?? TREND_DEFAULT_STYLE);
       const result = settings.useMockMode || !settings.geminiApiKey
         ? { imageUrl: await mockGenerateSlideImage(scene) }
         : await generateSlideImage(settings.geminiApiKey, prompt);

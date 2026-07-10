@@ -1,33 +1,42 @@
 import { useEffect, useRef, useState } from 'react';
-import { CheckCircle2, Loader2, Sparkles } from 'lucide-react';
+import { CheckCircle2, Loader2, Sparkles, AlertTriangle } from 'lucide-react';
 import { useApp } from '../../store/AppContext';
 import { generateHooks, generateScriptSplit } from '../../services/gemini.service';
-import { mockGenerateHooks, mockGenerateScriptSplit } from '../../services/mock.service';
-import type { SubtitleNarrationSettings } from '../../types';
+import { mockGenerateHooks, mockGenerateScriptSplit, mockGenerateSlideImage } from '../../services/mock.service';
+import { generateVeoClip } from '../../services/veo.service';
+import { generateSlideImage } from '../../services/imagen.service';
+import { buildSlideImagePrompt } from '../../prompts';
+import {
+  analyzeReference, mockAnalyzeReference, TREND_DEFAULT_STYLE,
+} from '../../services/reference.service';
+import type { ReferenceStyle, SubtitleNarrationSettings } from '../../types';
 
-const DEFAULT_NARRATION: SubtitleNarrationSettings = {
-  subtitleEnabled: true,
-  subtitlePosition: 'bottom',
-  subtitleSize: 'medium',
-  subtitleStyle: 'outline',
-  narrationEnabled: true,
-  narrationGender: 'female',
-  narrationMood: '차분한',
-  narrationSpeed: 1.0,
-  selectedVoiceId: 'EXAVITQu4vr4xnSDxMaL',
-  selectedVoiceName: '김서연',
-  soundEffectsEnabled: false,
-  soundEffects: [],
-};
+function buildNarrationDefaults(style: ReferenceStyle): SubtitleNarrationSettings {
+  return {
+    subtitleEnabled: true,
+    subtitlePosition: style.subtitle.position,
+    subtitleSize: style.subtitle.size,
+    subtitleStyle: style.subtitle.style,
+    narrationEnabled: true,
+    narrationGender: 'female',
+    narrationMood: '친근한',
+    narrationSpeed: 1.0,
+    selectedVoiceId: 'EXAVITQu4vr4xnSDxMaL',
+    selectedVoiceName: '김서연',
+    soundEffectsEnabled: true,
+    soundEffects: [],
+  };
+}
 
-type TaskStatus = 'pending' | 'running' | 'done';
+type TaskStatus = 'pending' | 'running' | 'done' | 'warn';
 
 const TASKS = [
-  { id: 'hooks',    label: '훅 라인 선택',       desc: 'AI가 시청자를 사로잡는 오프닝 문장을 선택합니다' },
-  { id: 'script',   label: '대본 분리',           desc: '30초 타임라인으로 스크립트를 구성합니다' },
-  { id: 'veo',      label: 'Veo 클립 프롬프트',   desc: '도입부 AI 영상 씬 프롬프트를 생성합니다' },
-  { id: 'slides',   label: '슬라이드 씬 구성',    desc: '이미지+텍스트 슬라이드를 배치합니다' },
-  { id: 'narration',label: '자막/나레이션 설정',   desc: '목소리와 자막 설정을 자동 적용합니다' },
+  { id: 'style',    label: '스타일 분석',          desc: '레퍼런스 영상의 컨셉·색감·자막·BGM을 분석합니다' },
+  { id: 'hooks',    label: '훅 라인 선택',          desc: 'AI가 시청자를 사로잡는 오프닝 문장을 선택합니다' },
+  { id: 'script',   label: '대본 구성 (20초)',      desc: 'Veo 8초 + 슬라이드 12초 타임라인으로 구성합니다' },
+  { id: 'veo',      label: 'AI 영상 생성 (8초)',    desc: 'Veo로 도입부 영상을 생성합니다' },
+  { id: 'slides',   label: '슬라이드 구성 (12초)',  desc: '업로드 미디어와 AI 이미지로 장면을 채웁니다' },
+  { id: 'narration',label: '자막/나레이션 설정',     desc: '레퍼런스 스타일에 맞춰 자막과 목소리를 설정합니다' },
 ];
 
 const pause = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
@@ -41,23 +50,32 @@ export default function SimpleAutoProcess({ onError }: Props) {
     session, settings,
     setHooks, selectHook, setScriptSplit, updateVeoClip, updateSlideScene,
     setSubtitleNarration, setStep, preUploadedAssets,
+    reference, setReference,
   } = useApp();
 
   const [statuses, setStatuses] = useState<TaskStatus[]>(TASKS.map(() => 'pending'));
+  const [dynamicDesc, setDynamicDesc] = useState<string>('');
+  const [warnings, setWarnings] = useState<string[]>([]);
   const [doneAll, setDoneAll]   = useState(false);
   const ran = useRef(false);
 
   // snapshot session values at mount — they are set by step 1 & 2
-  const planning    = useRef(session.planning);
+  const planning     = useRef(session.planning);
   const selectedIdea = useRef(session.selectedIdea);
+  const refState     = useRef(reference);
 
   function mark(idx: number, status: TaskStatus) {
     setStatuses(prev => prev.map((s, i) => (i === idx ? status : s)));
+    if (status !== 'running') setDynamicDesc('');
   }
 
   useEffect(() => {
     if (ran.current) return;
     ran.current = true;
+
+    const isMock = settings.useMockMode || !settings.geminiApiKey;
+    const apiKey = settings.geminiApiKey;
+    const warns: string[] = [];
 
     (async () => {
       try {
@@ -65,60 +83,126 @@ export default function SimpleAutoProcess({ onError }: Props) {
           throw new Error('기획 또는 아이디어가 선택되지 않았습니다.');
         }
 
-        // ── Step 3: 훅 선택 ──────────────────────────────────────────────
+        // ── 0: 스타일 분석 (레퍼런스 or 트렌드 기본값) ────────────────────
         mark(0, 'running');
-        const hooks = settings.useMockMode || !settings.geminiApiKey
+        let style: ReferenceStyle;
+        const ref = refState.current;
+        if (ref.analysis) {
+          style = ref.analysis;
+          await pause(600);
+        } else if (ref.url || ref.videoDataUrl) {
+          try {
+            style = isMock
+              ? await mockAnalyzeReference()
+              : await analyzeReference(apiKey, ref);
+            setReference(prev => ({ ...prev, analysis: style, status: 'done' }));
+          } catch {
+            style = TREND_DEFAULT_STYLE;
+            warns.push('레퍼런스 분석에 실패해 트렌드 스타일로 대체했습니다.');
+          }
+        } else {
+          setDynamicDesc('레퍼런스가 없어 최신 숏폼 트렌드 스타일을 적용합니다');
+          style = TREND_DEFAULT_STYLE;
+          await pause(900);
+        }
+        mark(0, 'done');
+        await pause(300);
+
+        // ── 1: 훅 선택 ──────────────────────────────────────────────────
+        mark(1, 'running');
+        const hooks = isMock
           ? await mockGenerateHooks()
-          : await generateHooks(settings.geminiApiKey, planning.current, selectedIdea.current);
+          : await generateHooks(apiKey, planning.current, selectedIdea.current, style);
         setHooks(hooks);
         if (hooks.length > 0) selectHook(hooks[0]);
-        mark(0, 'done');
-        await pause(400);
+        mark(1, 'done');
+        await pause(300);
 
-        // ── Step 4: 대본 분리 ─────────────────────────────────────────────
-        mark(1, 'running');
-        const hookToUse = hooks[0];
-        const split = settings.useMockMode || !settings.geminiApiKey
+        // ── 2: 대본 분리 (8초 Veo + 12초 슬라이드) ───────────────────────
+        mark(2, 'running');
+        const split = isMock
           ? await mockGenerateScriptSplit()
           : await generateScriptSplit(
-              settings.geminiApiKey, planning.current, selectedIdea.current, hookToUse,
+              apiKey, planning.current, selectedIdea.current, hooks[0], style,
             );
         setScriptSplit(split);
-        mark(1, 'done');
-        await pause(400);
+        mark(2, 'done');
+        await pause(300);
 
-        // ── Step 5: Veo 클립 — 업로드 영상 있으면 적용 ───────────────────
-        mark(2, 'running');
-        await pause(600);
+        // ── 3: Veo 8초 영상 — 업로드 영상 우선, 없으면 AI 생성 ───────────
+        mark(3, 'running');
         if (preUploadedAssets.videoUrl) {
+          setDynamicDesc('업로드한 영상을 도입부에 적용합니다');
+          await pause(700);
           updateVeoClip({
             ...split.veo_core_clip,
             videoUrl: preUploadedAssets.videoUrl,
             status: 'done',
           });
+        } else if (!isMock) {
+          try {
+            const veoPrompt = `${split.veo_core_clip.prompt}\n\nStyle guide (match closely): ${style.promptGuide}`;
+            const result = await generateVeoClip(
+              apiKey,
+              { prompt: veoPrompt, durationSeconds: 8, aspectRatio: '9:16' },
+              msg => setDynamicDesc(msg),
+            );
+            updateVeoClip({
+              ...split.veo_core_clip,
+              prompt: veoPrompt,
+              videoUrl: result.videoUrl,
+              duration: 8,
+              status: 'done',
+            });
+          } catch (e) {
+            warns.push(`AI 영상 생성 실패 — 스토리보드에서 다시 시도할 수 있습니다. (${e instanceof Error ? e.message : ''})`);
+            updateVeoClip({ ...split.veo_core_clip, status: 'error' });
+          }
+        } else {
+          setDynamicDesc('데모 모드 — 영상 생성을 건너뜁니다 (API 키 필요)');
+          await pause(1000);
         }
-        mark(2, 'done');
-        await pause(400);
-
-        // ── Step 6: 슬라이드 — 업로드 사진 있으면 순서대로 적용 ──────────
-        mark(3, 'running');
-        await pause(500);
-        preUploadedAssets.photoUrls.forEach((photoUrl, i) => {
-          const scene = split.slide_scenes[i];
-          if (scene) updateSlideScene({ ...scene, imageUrl: photoUrl, imageStatus: 'done' });
-        });
         mark(3, 'done');
-        await pause(400);
+        await pause(300);
 
-        // ── Step 7: 자막/나레이션 기본값 적용 ────────────────────────────
+        // ── 4: 슬라이드 12초 — 업로드 사진 → 부족분 AI 이미지 ────────────
         mark(4, 'running');
-        await pause(400);
-        setSubtitleNarration(DEFAULT_NARRATION);
+        const scenes = split.slide_scenes;
+        let photoIdx = 0;
+        for (let i = 0; i < scenes.length; i++) {
+          const scene = scenes[i];
+          const photo = preUploadedAssets.photoUrls[photoIdx];
+          if (photo) {
+            setDynamicDesc(`업로드한 사진을 장면 ${i + 1}에 적용합니다 (${i + 1}/${scenes.length})`);
+            updateSlideScene({ ...scene, imageUrl: photo, imageStatus: 'done' });
+            photoIdx++;
+            await pause(350);
+          } else {
+            setDynamicDesc(`AI 이미지 생성 중 (${i + 1}/${scenes.length}) — ${scene.scene_title}`);
+            try {
+              const imageUrl = isMock
+                ? await mockGenerateSlideImage(scene)
+                : (await generateSlideImage(apiKey, buildSlideImagePrompt(scene, selectedIdea.current!, style))).imageUrl;
+              updateSlideScene({ ...scene, imageUrl, imageStatus: 'done' });
+            } catch {
+              warns.push(`장면 ${i + 1} 이미지 생성 실패 — 스토리보드에서 다시 생성할 수 있습니다.`);
+              updateSlideScene({ ...scene, imageStatus: 'error' });
+            }
+          }
+        }
         mark(4, 'done');
-        await pause(700);
+        await pause(300);
 
+        // ── 5: 자막/나레이션 — 레퍼런스 스타일 반영 ──────────────────────
+        mark(5, 'running');
+        setDynamicDesc(`자막: ${style.subtitle.description}`);
+        await pause(800);
+        setSubtitleNarration(buildNarrationDefaults(style));
+        mark(5, 'done');
+
+        setWarnings(warns);
         setDoneAll(true);
-        await pause(900);
+        await pause(warns.length ? 2200 : 900);
         setStep('storyboard');
       } catch (e) {
         onError(e instanceof Error ? e.message : '자동 제작 중 오류가 발생했습니다.');
@@ -126,7 +210,7 @@ export default function SimpleAutoProcess({ onError }: Props) {
     })();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const doneCount = statuses.filter(s => s === 'done').length;
+  const doneCount = statuses.filter(s => s === 'done' || s === 'warn').length;
   const progress  = Math.round((doneCount / TASKS.length) * 100);
 
   return (
@@ -141,7 +225,7 @@ export default function SimpleAutoProcess({ onError }: Props) {
             </div>
             <div>
               <h2 className="font-bold text-lg leading-tight">AI가 자동 제작 중</h2>
-              <p className="text-sm text-violet-200">기획 정보를 바탕으로 나머지 과정을 처리합니다</p>
+              <p className="text-sm text-violet-200">레퍼런스 스타일에 맞춰 20초 숏폼을 만듭니다</p>
             </div>
           </div>
           <div className="bg-white/20 rounded-full h-1.5 mt-2">
@@ -168,6 +252,9 @@ export default function SimpleAutoProcess({ onError }: Props) {
                   {status === 'done' && (
                     <CheckCircle2 className="w-5 h-5 text-emerald-500" />
                   )}
+                  {status === 'warn' && (
+                    <AlertTriangle className="w-5 h-5 text-amber-500" />
+                  )}
                   {status === 'running' && (
                     <Loader2 className="w-5 h-5 text-violet-500 animate-spin" />
                   )}
@@ -186,7 +273,7 @@ export default function SimpleAutoProcess({ onError }: Props) {
                   </p>
                   {status === 'running' && (
                     <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed">
-                      {task.desc}
+                      {dynamicDesc || task.desc}
                     </p>
                   )}
                 </div>
@@ -196,8 +283,14 @@ export default function SimpleAutoProcess({ onError }: Props) {
         </div>
 
         {doneAll && (
-          <div className="px-6 pb-6 text-center animate-pulse">
-            <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
+          <div className="px-6 pb-6 space-y-2">
+            {warnings.map((w, i) => (
+              <p key={i} className="flex items-start gap-1.5 text-xs text-amber-600 dark:text-amber-400">
+                <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+                {w}
+              </p>
+            ))}
+            <p className="text-center text-sm font-semibold text-emerald-600 dark:text-emerald-400 animate-pulse">
               모든 작업 완료! 스토리보드로 이동합니다...
             </p>
           </div>

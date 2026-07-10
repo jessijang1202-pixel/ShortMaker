@@ -213,6 +213,23 @@ export const WIZARD_STEPS: WizardStepMeta[] = [
   { id: 'export',              label: '내보내기',          shortLabel: '내보내기',   stepNumber: 10 },
 ];
 
+// ─── Reference Style ──────────────────────────────────────────────────────────
+
+export interface ReferenceStyle {
+  concept: string;              // 콘셉트/무드 요약 (한글)
+  colorPalette: string[];       // 주요 색상 (hex 또는 짧은 설명)
+  subtitle: {
+    position: TextPosition;
+    size: TextSize;
+    style: SubtitleStyle;
+    description: string;        // 폰트 느낌, 강조 방식 등
+  };
+  bgm: string;                  // 배경 음악 분위기
+  soundEffects: string[];       // 효과음 특징
+  editingPace: string;          // 편집 템포
+  promptGuide: string;          // 영문 스타일 가이드 — 생성 프롬프트에 그대로 주입
+}
+
 // ─── Full Session ─────────────────────────────────────────────────────────────
 
 export interface AppSession {

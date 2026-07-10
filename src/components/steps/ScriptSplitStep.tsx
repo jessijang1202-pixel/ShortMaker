@@ -6,9 +6,10 @@ import Alert from '../ui/Alert';
 import { LoadingOverlay } from '../ui/LoadingSpinner';
 import { generateScriptSplit } from '../../services/gemini.service';
 import { mockGenerateScriptSplit } from '../../services/mock.service';
+import { TREND_DEFAULT_STYLE } from '../../services/reference.service';
 
 export default function ScriptSplitStep() {
-  const { session, settings, setScriptSplit, updateVeoClip, setStep } = useApp();
+  const { session, settings, setScriptSplit, updateVeoClip, setStep, reference } = useApp();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [editingScript, setEditingScript] = useState(false);
@@ -27,7 +28,10 @@ export default function ScriptSplitStep() {
     try {
       const split = settings.useMockMode || !settings.geminiApiKey
         ? await mockGenerateScriptSplit()
-        : await generateScriptSplit(settings.geminiApiKey, session.planning, session.selectedIdea, session.selectedHook);
+        : await generateScriptSplit(
+            settings.geminiApiKey, session.planning, session.selectedIdea, session.selectedHook,
+            reference.analysis ?? TREND_DEFAULT_STYLE,
+          );
       setScriptSplit(split);
     } catch (e) {
       setError(`대본 생성에 실패했습니다. ${e instanceof Error ? e.message : ''}`);

@@ -1,4 +1,4 @@
-import type { PlanningInput, ContentIdea, HookOption, ScriptSplit } from '../types';
+import type { PlanningInput, ContentIdea, HookOption, ScriptSplit, ReferenceStyle } from '../types';
 
 // ─── Context Builder ───────────────────────────────────────────────────────────
 
@@ -13,6 +13,22 @@ function ctx(p: PlanningInput) {
 - 주요 포인트 3: ${p.mainPoints[2]}
 - 피해야 할 표현: ${p.bannedExpressions || '없음'}
 - 원하는 말투: ${p.tone}
+`.trim();
+}
+
+// ─── Style Guide Builder (레퍼런스 분석 결과 또는 트렌드 기본값) ────────────────
+
+function styleCtx(style?: ReferenceStyle | null): string {
+  if (!style) return '';
+  return `
+[스타일 가이드 — 레퍼런스 영상 분석 결과]
+- 컨셉/무드: ${style.concept}
+- 색감: ${style.colorPalette.join(', ')}
+- 자막: ${style.subtitle.description} (위치: ${style.subtitle.position}, 크기: ${style.subtitle.size})
+- BGM: ${style.bgm}
+- 효과음: ${style.soundEffects.join(', ')}
+- 편집 템포: ${style.editingPace}
+→ 모든 산출물(대본 톤, 씬 구성, 화면 텍스트, 이미지/영상 프롬프트)을 이 스타일과 최대한 비슷한 분위기로 맞출 것.
 `.trim();
 }
 
@@ -53,12 +69,13 @@ ${ctx(p)}
 
 // ─── Hook Generation ───────────────────────────────────────────────────────────
 
-export function buildHookPrompt(p: PlanningInput, idea: ContentIdea): string {
+export function buildHookPrompt(p: PlanningInput, idea: ContentIdea, style?: ReferenceStyle | null): string {
   return `
 당신은 숏폼 영상 오프닝 카피라이터입니다.
 첫 3초를 사로잡을 훅 라인 3가지를 만들어주세요.
 
 ${ctx(p)}
+${styleCtx(style)}
 선택된 아이디어: ${idea.idea_title}
 핵심 방향: ${idea.main_angle}
 감성 방향: ${idea.emotional_angle}
@@ -86,12 +103,14 @@ export function buildScriptSplitPrompt(
   p: PlanningInput,
   idea: ContentIdea,
   hook: HookOption,
+  style?: ReferenceStyle | null,
 ): string {
   return `
-당신은 한국 정치 숏폼 대본 작가입니다.
-30초 숏폼 영상 대본을 작성하고, Veo AI 클립(0-10초)과 슬라이드(10-30초)로 분리해주세요.
+당신은 숏폼 대본 작가입니다.
+20초 숏폼 영상 대본을 작성하고, Veo AI 클립(0-8초)과 슬라이드(8-20초)로 분리해주세요.
 
 ${ctx(p)}
+${styleCtx(style)}
 선택된 아이디어: ${idea.idea_title}
 선택된 훅: "${hook.text}" (${hook.style})
 
@@ -102,24 +121,24 @@ ${ctx(p)}
 - 행동 (Action/CTA): 함께 하자는 제안
 
 [분리 규칙]
-1) veo_core_clip (8-10초 분량):
+1) veo_core_clip (정확히 8초 분량):
    - 선택된 훅으로 시작
    - 문제 + 공감의 핵심 요약
-   - 낭독 시 8-10초 안에 끝나는 길이
+   - 낭독 시 8초 안에 끝나는 길이
    - Veo AI 영상 생성 프롬프트 (영어로 작성):
-     * 세로 9:16 비율, 따뜻한 다큐멘터리 스타일
-     * 한국인 모습, 자연광, 응원과 감사의 분위기
-     * 파티 로고나 특정 정치 심벌 없이
+     * 세로 9:16 비율
+     * 위 스타일 가이드의 컨셉·색감·무드를 반드시 반영
+     * 특정 브랜드 로고나 심벌 없이
 
-2) slide_scenes (남은 20-22초, 반드시 6개 장면):
-   - 각 장면은 3-4초 내외 (6개 × 3-4초 = 총 20-22초)
+2) slide_scenes (남은 12초, 반드시 4개 장면):
+   - 각 장면은 3초 (4개 × 3초 = 총 12초)
    - on_screen_text: 화면에 크게 표시할 1-2줄
    - narration_text: 추가 나레이션
-   - visual_description: 이미지 생성용 설명 (영어)
+   - visual_description: 이미지 생성용 설명 (영어) — 스타일 가이드의 색감·무드 반영
 
 규칙:
 - 피해야 할 표현 절대 금지
-- 따뜻하고 진중한 말투: ${p.tone}
+- 말투: ${p.tone}
 - 확인되지 않은 사실 단정 금지
 
 반드시 아래 JSON 형식으로만 응답:
@@ -132,9 +151,9 @@ ${ctx(p)}
     "action": "행동 파트"
   },
   "veo_core_clip": {
-    "text": "훅+문제+공감 핵심 요약 (8-10초 분량)",
-    "prompt": "English Veo prompt: vertical 9:16, warm documentary, Korean person, natural light, no political logos...",
-    "duration": 9
+    "text": "훅+문제+공감 핵심 요약 (8초 분량)",
+    "prompt": "English Veo prompt: vertical 9:16, matching the style guide mood and colors...",
+    "duration": 8
   },
   "slide_scenes": [
     {
@@ -142,8 +161,8 @@ ${ctx(p)}
       "scene_title": "장면 제목",
       "on_screen_text": "화면에 크게 표시될 1-2줄",
       "narration_text": "나레이션 텍스트",
-      "visual_description": "English image prompt for AI generation",
-      "duration_seconds": 7
+      "visual_description": "English image prompt for AI generation, matching the style guide",
+      "duration_seconds": 3
     }
   ]
 }
@@ -158,34 +177,36 @@ export function buildVeoPrompt(
   hook: HookOption,
   clipText: string,
   duration: number,
+  style?: ReferenceStyle | null,
 ): string {
+  const styleBlock = style ? `
+Reference style guide (match this as closely as possible):
+${style.promptGuide}
+Color palette: ${style.colorPalette.join(', ')}
+Editing pace: ${style.editingPace}
+BGM mood: ${style.bgm}
+` : `
+Visual style:
+- Warm natural lighting, soft focus background
+- Authentic, non-staged feeling
+- Clean modern Korean urban environment
+`;
+
   return `
-Vertical short-form political video clip, ${duration} seconds, 9:16 aspect ratio.
+Vertical short-form video clip, ${duration} seconds, 9:16 aspect ratio.
 
 Content theme: ${idea.main_angle}
 Opening hook: "${hook.text}"
 Narration: "${clipText}"
-Tone: warm, sincere, documentary-style
-
-Visual style:
-- Korean person (age 25-45) in natural indoor or outdoor setting
-- Warm natural lighting, soft focus background
-- Authentic, non-staged feeling
-- Clean modern Korean urban environment
-- NO party logos, NO political symbols, NO candidate names visible
-- Clothing: casual professional, neutral colors
+${styleBlock}
+Rules:
+- Korean setting, authentic and human
+- NO brand logos, NO political symbols visible
+- Space for voice-over narration and caption overlay
 
 Camera:
-- Slight handheld movement for authenticity
 - Close-up to medium shot
 - Eye contact with camera (direct address to viewer)
-
-Audio:
-- Ambient background sound
-- No music unless very subtle and warm
-- Space for voice-over narration
-
-Mood: grateful, sincere, forward-looking, warm
 `.trim();
 }
 
@@ -194,21 +215,29 @@ Mood: grateful, sincere, forward-looking, warm
 export function buildSlideImagePrompt(
   scene: { scene_title: string; visual_description: string },
   _idea: ContentIdea,
+  style?: ReferenceStyle | null,
 ): string {
+  const styleBlock = style ? `
+Reference style guide (match this as closely as possible):
+${style.promptGuide}
+Color palette: ${style.colorPalette.join(', ')}
+` : `
+- Warm, documentary-style photography
+- Soft, warm color palette (amber, warm white, gentle blues)
+`;
+
   return `
-Vertical 9:16 image for political short-form video slide.
+Vertical 9:16 image for a short-form video slide.
 
 Scene theme: ${scene.scene_title}
 Visual description: ${scene.visual_description}
 
 Style requirements:
 - Vertical composition (9:16 portrait orientation)
-- Warm, documentary-style photography
 - Korean setting, authentic and human
-- Soft, warm color palette (amber, warm white, gentle blues)
+${styleBlock}
 - Leave space in upper or lower third for text overlay
-- No political logos, no party symbols
-- Cinematic but accessible mood
+- No brand logos, no political symbols
 - High quality, clean composition
 `.trim();
 }

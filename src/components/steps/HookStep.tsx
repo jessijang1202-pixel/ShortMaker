@@ -8,9 +8,10 @@ import Badge from '../ui/Badge';
 import { LoadingOverlay } from '../ui/LoadingSpinner';
 import { generateHooks } from '../../services/gemini.service';
 import { mockGenerateHooks } from '../../services/mock.service';
+import { TREND_DEFAULT_STYLE } from '../../services/reference.service';
 
 export default function HookStep() {
-  const { session, settings, setHooks, selectHook, setStep, hooksRegenKey } = useApp();
+  const { session, settings, setHooks, selectHook, setStep, hooksRegenKey, reference } = useApp();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -30,7 +31,10 @@ export default function HookStep() {
     try {
       const hooks = settings.useMockMode || !settings.geminiApiKey
         ? await mockGenerateHooks()
-        : await generateHooks(settings.geminiApiKey, session.planning, session.selectedIdea);
+        : await generateHooks(
+            settings.geminiApiKey, session.planning, session.selectedIdea,
+            reference.analysis ?? TREND_DEFAULT_STYLE,
+          );
       setHooks(hooks);
     } catch (e) {
       setError(`훅 생성에 실패했습니다. ${e instanceof Error ? e.message : ''}`);

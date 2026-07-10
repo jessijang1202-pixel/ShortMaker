@@ -1,11 +1,164 @@
-import { useState } from 'react';
-import { Sparkles, ChevronRight, Camera, Video } from 'lucide-react';
+import { useRef, useState } from 'react';
+import {
+  Sparkles, ChevronRight, Camera, Video, Link2, Clapperboard,
+  Loader2, CheckCircle2, X, TrendingUp, Search,
+} from 'lucide-react';
 import clsx from 'clsx';
 import { useApp } from '../../store/AppContext';
 import { CATEGORIES, TONE_OPTIONS, type PlanningInput, type Category } from '../../types';
 import Button from '../ui/Button';
 import Alert from '../ui/Alert';
 import { DEMO_PLANNING_AUTOFILL } from '../../services/mock.service';
+import {
+  analyzeReference, mockAnalyzeReference, MAX_REFERENCE_VIDEO_BYTES,
+} from '../../services/reference.service';
+
+// ─── Reference video section ───────────────────────────────────────────────────
+
+function ReferenceSection() {
+  const { reference, setReference, settings } = useApp();
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [urlInput, setUrlInput] = useState(reference.url ?? '');
+
+  async function runAnalysis(source: { url?: string; videoDataUrl?: string; videoMimeType?: string; fileName?: string }) {
+    setReference(prev => ({ ...prev, ...source, status: 'generating', errorMessage: undefined }));
+    try {
+      const analysis = settings.useMockMode || !settings.geminiApiKey
+        ? await mockAnalyzeReference()
+        : await analyzeReference(settings.geminiApiKey, source);
+      setReference(prev => ({ ...prev, analysis, status: 'done' }));
+    } catch (e) {
+      setReference(prev => ({
+        ...prev, status: 'error',
+        errorMessage: e instanceof Error ? e.message : '레퍼런스 분석에 실패했습니다.',
+      }));
+    }
+  }
+
+  function handleUrlAnalyze() {
+    const url = urlInput.trim();
+    if (!url) return;
+    runAnalysis({ url, videoDataUrl: undefined, videoMimeType: undefined, fileName: undefined });
+  }
+
+  function handleFile(file: File) {
+    if (!file.type.startsWith('video/')) return;
+    if (file.size > MAX_REFERENCE_VIDEO_BYTES) {
+      setReference(prev => ({
+        ...prev, status: 'error',
+        errorMessage: '영상이 너무 큽니다 (최대 15MB). 짧게 잘라 올리거나 링크를 사용해 주세요.',
+      }));
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      setUrlInput('');
+      runAnalysis({
+        url: undefined,
+        videoDataUrl: reader.result as string,
+        videoMimeType: file.type,
+        fileName: file.name,
+      });
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function clearReference() {
+    setUrlInput('');
+    setReference({ analysis: null, status: 'idle' });
+  }
+
+  const analyzing = reference.status === 'generating';
+
+  return (
+    <div className="wizard-card space-y-3 border-2 border-violet-200 dark:border-violet-800">
+      <div className="flex items-center justify-between">
+        <label className="section-label flex items-center gap-1.5">
+          <Clapperboard className="w-4 h-4 text-violet-500" />
+          레퍼런스 영상 (선택)
+        </label>
+        {(reference.url || reference.fileName || reference.analysis) && (
+          <button onClick={clearReference}
+            className="text-xs text-slate-400 hover:text-red-500 flex items-center gap-1 transition-colors">
+            <X className="w-3 h-3" /> 초기화
+          </button>
+        )}
+      </div>
+      <p className="text-xs text-slate-500 dark:text-slate-400">
+        따라 만들고 싶은 숏폼이 있다면 링크를 붙여넣거나 영상을 올려주세요.
+        컨셉·색감·자막·BGM·효과음을 분석해 비슷한 분위기로 제작합니다.
+      </p>
+
+      {/* URL input */}
+      <div className="flex gap-2">
+        <div className="relative flex-1">
+          <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <input className="input-base pl-9" placeholder="YouTube Shorts 링크 붙여넣기"
+            value={urlInput} onChange={e => setUrlInput(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') handleUrlAnalyze(); }}
+            disabled={analyzing} />
+        </div>
+        <Button variant="secondary" size="sm" onClick={handleUrlAnalyze}
+          disabled={!urlInput.trim() || analyzing}
+          leftIcon={<Search className="w-3.5 h-3.5" />}>
+          분석
+        </Button>
+      </div>
+
+      {/* File upload */}
+      <div className="flex items-center gap-2">
+        <button type="button" onClick={() => fileRef.current?.click()} disabled={analyzing}
+          className="flex items-center gap-1.5 text-xs font-medium text-violet-600 dark:text-violet-400 hover:underline disabled:opacity-50">
+          <Video className="w-3.5 h-3.5" />
+          또는 영상 파일 업로드 (최대 15MB)
+        </button>
+        {reference.fileName && (
+          <span className="text-xs text-slate-500 truncate">— {reference.fileName}</span>
+        )}
+      </div>
+      <input ref={fileRef} type="file" accept="video/*" className="hidden"
+        onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = ''; }} />
+
+      {/* Status */}
+      {analyzing && (
+        <div className="flex items-center gap-2 text-sm text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-950/30 rounded-xl px-3 py-2.5">
+          <Loader2 className="w-4 h-4 animate-spin shrink-0" />
+          AI가 레퍼런스 영상의 스타일을 분석하고 있습니다...
+        </div>
+      )}
+      {reference.status === 'error' && (
+        <Alert variant="error" onClose={() => setReference(prev => ({ ...prev, status: 'idle', errorMessage: undefined }))}>
+          {reference.errorMessage}
+        </Alert>
+      )}
+      {reference.status === 'done' && reference.analysis && (
+        <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-xl px-3 py-2.5 space-y-1.5">
+          <p className="flex items-center gap-1.5 text-sm font-semibold text-emerald-700 dark:text-emerald-300">
+            <CheckCircle2 className="w-4 h-4 shrink-0" /> 스타일 분석 완료
+          </p>
+          <p className="text-xs text-emerald-800 dark:text-emerald-200 leading-relaxed">{reference.analysis.concept}</p>
+          <div className="flex flex-wrap gap-1.5 pt-0.5">
+            <span className="text-[10px] bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
+              자막: {reference.analysis.subtitle.position}/{reference.analysis.subtitle.size}
+            </span>
+            <span className="text-[10px] bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
+              BGM: {reference.analysis.bgm.slice(0, 20)}...
+            </span>
+            <span className="text-[10px] bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
+              템포: {reference.analysis.editingPace.slice(0, 18)}...
+            </span>
+          </div>
+        </div>
+      )}
+      {reference.status === 'idle' && !reference.analysis && (
+        <p className="flex items-center gap-1.5 text-xs text-slate-400 dark:text-slate-500">
+          <TrendingUp className="w-3.5 h-3.5 shrink-0" />
+          레퍼런스가 없으면 최신 숏폼 트렌드 스타일로 자동 구성됩니다
+        </p>
+      )}
+    </div>
+  );
+}
 
 export default function PlanningStep() {
   const { session, updatePlanning, setStep } = useApp();
@@ -75,6 +228,9 @@ export default function PlanningStep() {
       </div>
 
       {error && <Alert variant="error" onClose={() => setError('')}>{error}</Alert>}
+
+      {/* Reference video (양쪽 모드 공통 — 맨 처음) */}
+      <ReferenceSection />
 
       {/* Identity */}
       <div className="wizard-card space-y-2">

@@ -3,7 +3,7 @@ import type { User } from '@supabase/supabase-js';
 import type {
   AppSession, WizardStep, PlanningInput, ContentIdea, HookOption,
   ScriptSplit, SlideScene, VeoCoreClip, UploadCopyPackage, UserApiSettings,
-  SubtitleNarrationSettings,
+  SubtitleNarrationSettings, ReferenceStyle, GenerationStatus,
 } from '../types';
 import { WIZARD_STEPS } from '../types';
 import { useAuth } from './AuthContext';
@@ -26,6 +26,18 @@ export interface PreUploadedAssets {
   photoUrls: string[];
 }
 
+export interface ReferenceState {
+  url?: string;               // YouTube 등 공개 링크
+  videoDataUrl?: string;      // 업로드 파일 (data URL — Gemini 분석용)
+  videoMimeType?: string;
+  fileName?: string;
+  analysis: ReferenceStyle | null;
+  status: GenerationStatus;
+  errorMessage?: string;
+}
+
+const initialReference: ReferenceState = { analysis: null, status: 'idle' };
+
 interface AppContextType {
   session: AppSession;
   settings: UserApiSettings;
@@ -35,6 +47,8 @@ interface AppContextType {
   setVideoMode: (mode: 'simple' | 'advanced') => void;
   preUploadedAssets: PreUploadedAssets;
   setPreUploadedAssets: (assets: PreUploadedAssets) => void;
+  reference: ReferenceState;
+  setReference: React.Dispatch<React.SetStateAction<ReferenceState>>;
   // ── Advanced mode step review ──────────────────────────────────────────────
   pendingNextStep: WizardStep | null;       // navigation waiting for confirmation
   ideasRegenKey: number;                    // increment → IdeaStep auto-regenerates
@@ -93,6 +107,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettingsState]      = useState<UserApiSettings>(loadSettings);
   const [videoMode, setVideoMode]         = useState<'simple' | 'advanced'>('advanced');
   const [preUploadedAssets, setPreUploadedAssets] = useState<PreUploadedAssets>({ photoUrls: [] });
+  const [reference, setReference] = useState<ReferenceState>(initialReference);
   const [pendingNextStep, setPendingNextStep] = useState<WizardStep | null>(null);
   const [ideasRegenKey,   setIdeasRegenKey]   = useState(0);
   const [hooksRegenKey,   setHooksRegenKey]   = useState(0);
@@ -264,6 +279,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setSession(initialSession);
     setCurrentProjectId(null);
     setPreUploadedAssets({ photoUrls: [] });
+    setReference(initialReference);
   }, []);
 
   return (
@@ -271,6 +287,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       session, settings, isDark, currentProjectId,
       videoMode, setVideoMode,
       preUploadedAssets, setPreUploadedAssets,
+      reference, setReference,
       pendingNextStep, ideasRegenKey, hooksRegenKey,
       confirmPendingStep, cancelPendingStep, triggerRegenerate, directSetStep,
       setSettings, toggleDark, setStep,

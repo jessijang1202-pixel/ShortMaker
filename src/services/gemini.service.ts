@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import type { PlanningInput, ContentIdea, HookOption, ScriptSplit, UploadCopyPackage } from '../types';
+import type { PlanningInput, ContentIdea, HookOption, ScriptSplit, UploadCopyPackage, ReferenceStyle } from '../types';
 import {
   buildIdeaPrompt, buildHookPrompt, buildScriptSplitPrompt,
   buildImageAnalysisPrompt, buildUploadCopyPrompt,
@@ -27,23 +27,24 @@ export async function generateIdeas(apiKey: string, p: PlanningInput): Promise<C
 }
 
 export async function generateHooks(
-  apiKey: string, p: PlanningInput, idea: ContentIdea,
+  apiKey: string, p: PlanningInput, idea: ContentIdea, style?: ReferenceStyle | null,
 ): Promise<HookOption[]> {
-  const data = await generateJSON<{ hooks: HookOption[] }>(apiKey, buildHookPrompt(p, idea));
+  const data = await generateJSON<{ hooks: HookOption[] }>(apiKey, buildHookPrompt(p, idea, style));
   return data.hooks;
 }
 
 export async function generateScriptSplit(
   apiKey: string, p: PlanningInput, idea: ContentIdea, hook: HookOption,
+  style?: ReferenceStyle | null,
 ): Promise<ScriptSplit> {
-  const raw = await generateJSON<any>(apiKey, buildScriptSplitPrompt(p, idea, hook));
+  const raw = await generateJSON<any>(apiKey, buildScriptSplitPrompt(p, idea, hook, style));
   return {
     full_script: raw.full_script ?? '',
     structure: raw.structure ?? { problem: '', empathy: '', solution: '', action: '' },
     veo_core_clip: {
       text: raw.veo_core_clip?.text ?? '',
       prompt: raw.veo_core_clip?.prompt ?? '',
-      duration: raw.veo_core_clip?.duration ?? 9,
+      duration: raw.veo_core_clip?.duration ?? 8,
       status: 'idle',
     },
     slide_scenes: (raw.slide_scenes ?? []).map((s: any) => ({
@@ -52,7 +53,7 @@ export async function generateScriptSplit(
       on_screen_text: s.on_screen_text ?? '',
       narration_text: s.narration_text ?? '',
       visual_description: s.visual_description ?? '',
-      duration_seconds: s.duration_seconds ?? 7,
+      duration_seconds: s.duration_seconds ?? 3,
       imageStatus: 'idle' as const,
     })),
   };
