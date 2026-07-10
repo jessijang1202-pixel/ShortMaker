@@ -5,7 +5,8 @@ import {
   buildImageAnalysisPrompt, buildUploadCopyPrompt,
 } from '../prompts';
 
-const MODEL_ID = 'gemini-2.0-flash-exp';
+// gemini-2.0-flash-exp는 2026-06-01 서비스 종료 → 2.5 Flash로 마이그레이션
+const MODEL_ID = 'gemini-2.5-flash';
 
 function getModel(apiKey: string) {
   return new GoogleGenerativeAI(apiKey).getGenerativeModel({ model: MODEL_ID });

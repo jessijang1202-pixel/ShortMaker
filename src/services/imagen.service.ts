@@ -1,12 +1,12 @@
 // ─── Slide Image Generation via Gemini / Imagen API ──────────────────────────
-// Uses gemini-2.0-flash-preview-image-generation for inline image generation.
-// Falls back to imagen-3.0-generate-001 if primary model unavailable.
+// Uses gemini-2.5-flash-image (2.0 preview 모델은 2026-06-01 종료됨).
+// Falls back to Imagen if primary model unavailable.
 //
 // INTEGRATION POINT: Update model names as Google releases newer versions.
 
 const BASE = 'https://generativelanguage.googleapis.com/v1beta';
-const GEMINI_IMAGE_MODEL = 'gemini-2.0-flash-preview-image-generation';
-const IMAGEN_MODEL = 'imagen-3.0-generate-001';
+const GEMINI_IMAGE_MODEL = 'gemini-2.5-flash-image';
+const IMAGEN_MODEL = 'imagen-4.0-generate-001';
 
 export interface ImageGenResult {
   imageUrl: string;   // data URI: "data:image/png;base64,..."

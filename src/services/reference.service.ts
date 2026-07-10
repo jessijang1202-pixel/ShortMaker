@@ -6,7 +6,8 @@
 import type { ReferenceStyle } from '../types';
 
 const BASE = 'https://generativelanguage.googleapis.com/v1beta';
-const MODEL = 'gemini-2.0-flash-exp';
+// gemini-2.0-flash-exp는 2026-06-01 서비스 종료 → 2.5 Flash로 마이그레이션
+const MODEL = 'gemini-2.5-flash';
 
 // 업로드 영상 인라인 전송 한도 (Gemini inline 요청 20MB 제한 고려)
 export const MAX_REFERENCE_VIDEO_BYTES = 15 * 1024 * 1024;
