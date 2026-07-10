@@ -259,8 +259,8 @@ export default function SlidesStep() {
 
       <div className="flex justify-between pt-2">
         <Button variant="secondary" leftIcon={<ChevronLeft className="w-4 h-4" />} onClick={() => setStep('veo-clip')}>이전</Button>
-        <Button rightIcon={<ChevronRight className="w-4 h-4" />} onClick={() => setStep('storyboard')}>
-          스토리보드 보기
+        <Button rightIcon={<ChevronRight className="w-4 h-4" />} onClick={() => setStep('subtitle-narration')}>
+          자막/나레이션 설정
         </Button>
 
       </div>

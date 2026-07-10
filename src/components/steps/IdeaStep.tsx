@@ -180,19 +180,13 @@ function MediaUploadSection() {
 // ─── Main component ────────────────────────────────────────────────────────────
 
 export default function IdeaStep() {
-  const { session, settings, setIdeas, selectIdea, setStep, videoMode, ideasRegenKey } = useApp();
+  const { session, settings, setIdeas, selectIdea, setStep, videoMode } = useApp();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Initial auto-generate on mount
   useEffect(() => {
     if (!session.ideas.length && session.planning) doGenerate();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Regenerate when triggerRegenerate('ideas') is called from StepReviewPanel
-  useEffect(() => {
-    if (ideasRegenKey > 0 && session.planning) doGenerate();
-  }, [ideasRegenKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function doGenerate() {
     if (!session.planning) return;

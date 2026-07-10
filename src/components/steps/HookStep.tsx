@@ -11,19 +11,13 @@ import { mockGenerateHooks } from '../../services/mock.service';
 import { TREND_DEFAULT_STYLE } from '../../services/reference.service';
 
 export default function HookStep() {
-  const { session, settings, setHooks, selectHook, setStep, hooksRegenKey, reference } = useApp();
+  const { session, settings, setHooks, selectHook, setStep, reference } = useApp();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Initial auto-generate on mount
   useEffect(() => {
     if (!session.hooks.length && session.planning && session.selectedIdea) doGenerate();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Regenerate when triggerRegenerate('hooks') is called from StepReviewPanel
-  useEffect(() => {
-    if (hooksRegenKey > 0 && session.planning && session.selectedIdea) doGenerate();
-  }, [hooksRegenKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function doGenerate() {
     if (!session.planning || !session.selectedIdea) return;

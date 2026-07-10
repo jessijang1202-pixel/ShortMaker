@@ -6,7 +6,6 @@ import { WIZARD_STEPS, type WizardStep } from '../types';
 import { WizardSidebar, WizardTopBar } from '../components/layout/WizardProgress';
 import ProjectDrawer from '../components/layout/ProjectDrawer';
 import SimpleAutoProcess from '../components/layout/SimpleAutoProcess';
-import StepReviewPanel from '../components/layout/StepReviewPanel';
 import PlanningStep from '../components/steps/PlanningStep';
 import IdeaStep from '../components/steps/IdeaStep';
 import HookStep from '../components/steps/HookStep';
@@ -46,9 +45,8 @@ type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 
 export default function Wizard() {
   const {
-    session, settings, setStep, directSetStep, currentProjectId,
-    setCurrentProjectId, loadProjectSession, resetSession,
-    videoMode, pendingNextStep, confirmPendingStep, cancelPendingStep, triggerRegenerate,
+    session, settings, setStep, currentProjectId,
+    setCurrentProjectId, loadProjectSession, resetSession, videoMode,
   } = useApp();
   const navigate = useNavigate();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -124,7 +122,7 @@ export default function Wizard() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
         <div className="flex gap-8">
-          <WizardSidebar currentStep={currentStep} completedSteps={completed} onStepClick={directSetStep} />
+          <WizardSidebar currentStep={currentStep} completedSteps={completed} onStepClick={setStep} />
           <div className="flex-1 min-w-0 max-w-3xl">
             {autoError && (
               <Alert variant="error" onClose={() => { setAutoError(''); setStep('ideas'); }}>
@@ -138,16 +136,7 @@ export default function Wizard() {
 
       {showAutoProcess && (
         <SimpleAutoProcess
-          onError={msg => { setAutoError(msg); directSetStep('ideas'); }}
-        />
-      )}
-
-      {pendingNextStep && videoMode === 'advanced' && (
-        <StepReviewPanel
-          currentStep={currentStep}
-          onConfirm={confirmPendingStep}
-          onEdit={cancelPendingStep}
-          onRegenerate={() => triggerRegenerate(currentStep)}
+          onError={msg => { setAutoError(msg); setStep('ideas'); }}
         />
       )}
 

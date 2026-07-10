@@ -5,13 +5,8 @@ import type {
   ScriptSplit, SlideScene, VeoCoreClip, UploadCopyPackage, UserApiSettings,
   SubtitleNarrationSettings, ReferenceStyle, GenerationStatus,
 } from '../types';
-import { WIZARD_STEPS } from '../types';
 import { useAuth } from './AuthContext';
 import { loadUserProfile, saveUserProfile } from '../services/db.service';
-
-const STEP_INDEX: Record<WizardStep, number> = Object.fromEntries(
-  WIZARD_STEPS.map((s, i) => [s.id, i]),
-) as Record<WizardStep, number>;
 
 const initialSession: AppSession = {
   planning: null, ideas: [], selectedIdea: null,
@@ -49,15 +44,6 @@ interface AppContextType {
   setPreUploadedAssets: (assets: PreUploadedAssets) => void;
   reference: ReferenceState;
   setReference: React.Dispatch<React.SetStateAction<ReferenceState>>;
-  // ── Advanced mode step review ──────────────────────────────────────────────
-  pendingNextStep: WizardStep | null;       // navigation waiting for confirmation
-  ideasRegenKey: number;                    // increment → IdeaStep auto-regenerates
-  hooksRegenKey: number;                    // increment → HookStep auto-regenerates
-  confirmPendingStep: () => void;           // 승인 → navigate
-  cancelPendingStep: () => void;            // 수정 요청 → stay
-  triggerRegenerate: (step: WizardStep) => void; // 다시 만들기 → clear + regen key
-  directSetStep: (step: WizardStep) => void;     // sidebar / system navigation (no review)
-  // ─────────────────────────────────────────────────────────────────────────
   setSettings: (s: UserApiSettings) => void;
   toggleDark: () => void;
   setStep: (step: WizardStep) => void;
@@ -108,11 +94,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [videoMode, setVideoMode]         = useState<'simple' | 'advanced'>('advanced');
   const [preUploadedAssets, setPreUploadedAssets] = useState<PreUploadedAssets>({ photoUrls: [] });
   const [reference, setReference] = useState<ReferenceState>(initialReference);
-  const [pendingNextStep, setPendingNextStep] = useState<WizardStep | null>(null);
-  const [ideasRegenKey,   setIdeasRegenKey]   = useState(0);
-  const [hooksRegenKey,   setHooksRegenKey]   = useState(0);
-  const videoModeRef = useRef(videoMode);
-  useEffect(() => { videoModeRef.current = videoMode; }, [videoMode]);
   const [isDark, setIsDark]           = useState<boolean>(() => {
     const d = getInitialDark();
     if (d) document.documentElement.classList.add('dark');
@@ -161,74 +142,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
-  // directSetStep: always navigates, used by sidebar / system
-  const directSetStep = useCallback((step: WizardStep) => {
-    setPendingNextStep(null);
-    setSession(s => ({ ...s, currentStep: step }));
-  }, []);
-
-  // setStep: in advanced mode intercepts forward navigation by one step (the "다음" button)
-  const setStep = useCallback((step: WizardStep) => {
-    setSession(prev => {
-      const prevIdx = STEP_INDEX[prev.currentStep] ?? 0;
-      const nextIdx = STEP_INDEX[step] ?? 0;
-      const isSequentialForward = nextIdx === prevIdx + 1;
-      if (videoModeRef.current === 'advanced' && isSequentialForward) {
-        setPendingNextStep(step);
-        return prev; // hold navigation
-      }
-      setPendingNextStep(null);
-      return { ...prev, currentStep: step };
-    });
-  }, []);
-
-  const confirmPendingStep = useCallback(() => {
-    if (!pendingNextStep) return;
-    setSession(s => ({ ...s, currentStep: pendingNextStep }));
-    setPendingNextStep(null);
-  }, [pendingNextStep]);
-
-  const cancelPendingStep = useCallback(() => {
-    setPendingNextStep(null);
-  }, []);
-
-  const triggerRegenerate = useCallback((step: WizardStep) => {
-    setPendingNextStep(null);
-    // Clear step-specific data so the step component shows idle/empty state
-    setSession(prev => {
-      switch (step) {
-        case 'ideas':
-          return { ...prev, ideas: [], selectedIdea: null };
-        case 'hooks':
-          return { ...prev, hooks: [], selectedHook: null };
-        case 'script-split':
-          return { ...prev, scriptSplit: null };
-        case 'veo-clip':
-          return prev.scriptSplit ? {
-            ...prev, scriptSplit: {
-              ...prev.scriptSplit,
-              veo_core_clip: { ...prev.scriptSplit.veo_core_clip, videoUrl: undefined, status: 'idle' as const },
-            },
-          } : prev;
-        case 'slides':
-          return prev.scriptSplit ? {
-            ...prev, scriptSplit: {
-              ...prev.scriptSplit,
-              slide_scenes: prev.scriptSplit.slide_scenes.map(sc => ({
-                ...sc, imageUrl: undefined, imageStatus: 'idle' as const,
-              })),
-            },
-          } : prev;
-        case 'upload-copy':
-          return { ...prev, uploadCopy: null };
-        default:
-          return prev;
-      }
-    });
-    // Bump regen keys for auto-generating steps
-    if (step === 'ideas') setIdeasRegenKey(k => k + 1);
-    if (step === 'hooks') setHooksRegenKey(k => k + 1);
-  }, []);
+  const setStep = useCallback((step: WizardStep) =>
+    setSession(s => ({ ...s, currentStep: step })), []);
 
   const updatePlanning = useCallback((planning: PlanningInput) =>
     setSession(s => ({ ...s, planning })), []);
@@ -287,8 +202,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       videoMode, setVideoMode,
       preUploadedAssets, setPreUploadedAssets,
       reference, setReference,
-      pendingNextStep, ideasRegenKey, hooksRegenKey,
-      confirmPendingStep, cancelPendingStep, triggerRegenerate, directSetStep,
       setSettings, toggleDark, setStep,
       updatePlanning, setIdeas, selectIdea,
       setHooks, selectHook, setScriptSplit,
