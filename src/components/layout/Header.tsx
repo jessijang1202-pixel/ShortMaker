@@ -26,7 +26,7 @@ export default function Header() {
           <div className="w-8 h-8 bg-[#241E3C] rounded-xl flex items-center justify-center shadow-sm">
             <Film className="w-4 h-4 text-[#8BE8AC]" />
           </div>
-          <span className="brand-wordmark text-sm sm:text-base hidden xs:block">
+          <span className="brand-wordmark text-sm sm:text-base">
             <span className="text-[#241E3C] dark:text-white">Snap</span><span className="text-[#8489F2]">Reel</span>
           </span>
         </Link>
