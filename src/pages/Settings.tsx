@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Key, Eye, EyeOff, CheckCircle, XCircle, Loader2, Trash2, ExternalLink, ArrowLeft, Info, Mic, Cloud } from 'lucide-react';
+import { Key, Eye, EyeOff, CheckCircle, XCircle, Loader2, Trash2, ExternalLink, ArrowLeft, Info, Cloud } from 'lucide-react';
 import { useApp } from '../store/AppContext';
 import { useAuth } from '../store/AuthContext';
 import type { UserApiSettings } from '../types';
@@ -17,7 +17,6 @@ export default function Settings() {
 
   const [form, setForm] = useState<UserApiSettings>({ ...settings });
   const [showGemini, setShowGemini] = useState(false);
-  const [showElevenLabs, setShowElevenLabs] = useState(false);
   const [geminiStatus, setGeminiStatus] = useState<ValidStatus>('idle');
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
@@ -96,7 +95,7 @@ export default function Settings() {
         </div>
 
         <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
-          아이디어 생성, 훅, 대본 분리, 이미지 생성 (Veo/Imagen), 업로드 카피에 사용됩니다.
+          아이디어·대본 생성, Veo 영상(배경음악·효과음 포함), 이미지 생성, 업로드 카피에 사용됩니다.
         </p>
 
         <div className="relative">
@@ -147,43 +146,6 @@ export default function Settings() {
               삭제
             </Button>
           )}
-        </div>
-      </div>
-
-      {/* ElevenLabs API Key */}
-      <div className="wizard-card mb-4">
-        <div className="flex items-center gap-2 mb-4">
-          <Mic className="w-5 h-5 text-purple-500" />
-          <h2 className="font-semibold text-slate-900 dark:text-white">ElevenLabs API 키</h2>
-          <a
-            href="https://elevenlabs.io/app/settings/api-keys"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ml-auto text-xs text-blue-500 hover:underline flex items-center gap-1"
-          >
-            키 발급받기 <ExternalLink className="w-3 h-3" />
-          </a>
-        </div>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
-          자막과 나레이션 단계에서 AI 음성으로 나레이션을 생성할 때 사용됩니다.
-        </p>
-        <div className="relative">
-          <input
-            type={showElevenLabs ? 'text' : 'password'}
-            className="input-base pr-10"
-            placeholder="sk_..."
-            value={form.elevenLabsApiKey ?? ''}
-            onChange={e => setForm(f => ({ ...f, elevenLabsApiKey: e.target.value }))}
-            autoComplete="off"
-            spellCheck={false}
-          />
-          <button
-            type="button"
-            onClick={() => setShowElevenLabs(s => !s)}
-            className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-          >
-            {showElevenLabs ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-          </button>
         </div>
       </div>
 

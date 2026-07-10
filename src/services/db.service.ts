@@ -36,17 +36,6 @@ function stripBlobs(session: AppSession): Partial<AppSession> {
     };
   }
 
-  if (stripped.subtitleNarration) {
-    stripped.subtitleNarration = {
-      ...stripped.subtitleNarration,
-      soundEffects: stripped.subtitleNarration.soundEffects.map(ef => ({
-        ...ef,
-        audioUrl: undefined,
-        status: 'idle',
-      })),
-    };
-  }
-
   return stripped;
 }
 
@@ -103,21 +92,16 @@ export async function deleteProject(id: string): Promise<void> {
 export async function loadUserProfile(userId: string) {
   const { data } = await supabase
     .from('user_profiles')
-    .select('gemini_api_key, elevenlabs_api_key')
+    .select('gemini_api_key')
     .eq('id', userId)
     .single();
   return data;
 }
 
-export async function saveUserProfile(
-  userId: string,
-  geminiApiKey: string,
-  elevenLabsApiKey?: string,
-) {
+export async function saveUserProfile(userId: string, geminiApiKey: string) {
   await supabase.from('user_profiles').upsert({
     id: userId,
     gemini_api_key: geminiApiKey,
-    elevenlabs_api_key: elevenLabsApiKey ?? null,
     updated_at: new Date().toISOString(),
   });
 }

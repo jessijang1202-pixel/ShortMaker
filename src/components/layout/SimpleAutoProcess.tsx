@@ -21,10 +21,7 @@ function buildNarrationDefaults(style: ReferenceStyle): SubtitleNarrationSetting
     narrationGender: 'female',
     narrationMood: '친근한',
     narrationSpeed: 1.0,
-    selectedVoiceId: 'EXAVITQu4vr4xnSDxMaL',
-    selectedVoiceName: '김서연',
     soundEffectsEnabled: true,
-    soundEffects: [],
   };
 }
 

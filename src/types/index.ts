@@ -146,29 +146,17 @@ export type NarrationGender = 'male' | 'female';
 export type NarrationMood = '차분한' | '활기찬' | '진지한' | '감성적인' | '뉴스처럼' | '친근한';
 export type SubtitleStyle = 'default' | 'bold' | 'outline' | 'shadow';
 
-export interface SoundEffect {
-  id: string;
-  label: string;
-  prompt: string;
-  durationSeconds: number;
-  audioUrl?: string;
-  status: GenerationStatus;
-  errorMessage?: string;
-}
-
 export interface SubtitleNarrationSettings {
   subtitleEnabled: boolean;
   subtitlePosition: TextPosition;
   subtitleSize: TextSize;
   subtitleStyle: SubtitleStyle;
+  // 나레이션·BGM·효과음은 Veo 영상 생성 시 함께 생성됨 (아래는 프롬프트 힌트)
   narrationEnabled: boolean;
   narrationGender: NarrationGender;
   narrationMood: NarrationMood;
   narrationSpeed: number;          // 0.7 ~ 1.5
-  selectedVoiceId?: string;
-  selectedVoiceName?: string;
   soundEffectsEnabled: boolean;
-  soundEffects: SoundEffect[];
 }
 
 // ─── Settings ─────────────────────────────────────────────────────────────────
@@ -176,7 +164,6 @@ export interface SubtitleNarrationSettings {
 export interface UserApiSettings {
   geminiApiKey: string;
   useMockMode: boolean;
-  elevenLabsApiKey?: string;
 }
 
 // ─── Wizard Navigation ────────────────────────────────────────────────────────

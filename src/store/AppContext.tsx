@@ -135,7 +135,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         if (profile) {
           const loaded: UserApiSettings = {
             geminiApiKey: profile.gemini_api_key ?? '',
-            elevenLabsApiKey: profile.elevenlabs_api_key ?? '',
             useMockMode: !profile.gemini_api_key,
           };
           setSettingsState(loaded);
@@ -149,7 +148,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setSettingsState(s);
     persistSettings(s);
     if (userRef.current) {
-      saveUserProfile(userRef.current.id, s.geminiApiKey, s.elevenLabsApiKey).catch(() => {});
+      saveUserProfile(userRef.current.id, s.geminiApiKey).catch(() => {});
     }
   }, []);
 
