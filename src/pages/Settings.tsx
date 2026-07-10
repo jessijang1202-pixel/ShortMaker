@@ -61,18 +61,18 @@ export default function Settings() {
       </div>
 
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">API 키 설정</h1>
+        <h1 className="text-3xl font-black text-slate-900 dark:text-white">API 키 설정</h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
           API 키는 로그인 계정에 저장됩니다.
         </p>
       </div>
 
       {user && (
-        <div className="flex items-start gap-2.5 bg-violet-50 dark:bg-violet-950/30 border border-violet-200 dark:border-violet-800 rounded-xl px-4 py-3 mb-6 text-sm">
-          <Cloud className="w-4 h-4 text-violet-500 shrink-0 mt-0.5" />
+        <div className="flex items-start gap-2.5 bg-[#ECEDFD] dark:bg-[#8489F2]/10 border-2 border-[#C7C9FA] dark:border-[#8489F2]/30 rounded-2xl px-4 py-3 mb-6 text-sm">
+          <Cloud className="w-4 h-4 text-[#8489F2] shrink-0 mt-0.5" />
           <div>
-            <p className="font-medium text-violet-700 dark:text-violet-300">계정에 저장됩니다</p>
-            <p className="text-violet-600 dark:text-violet-400 text-xs mt-0.5">
+            <p className="font-bold text-[#5157D8] dark:text-[#B4B7F8]">계정에 저장됩니다</p>
+            <p className="text-[#5157D8]/80 dark:text-[#B4B7F8]/80 text-xs mt-0.5">
               <strong>{user.email}</strong> 계정에 암호화 저장 — 다음 로그인 시 자동으로 불러옵니다.
             </p>
           </div>
@@ -82,13 +82,13 @@ export default function Settings() {
       {/* Gemini API Key */}
       <div className="wizard-card mb-4">
         <div className="flex items-center gap-2 mb-4">
-          <Key className="w-5 h-5 text-blue-500" />
-          <h2 className="font-semibold text-slate-900 dark:text-white">Gemini API 키</h2>
+          <Key className="w-5 h-5 text-[#8489F2]" />
+          <h2 className="font-black text-slate-900 dark:text-white">Gemini API 키</h2>
           <a
             href="https://aistudio.google.com/app/apikey"
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-auto text-xs text-blue-500 hover:underline flex items-center gap-1"
+            className="ml-auto text-xs font-bold text-[#5157D8] dark:text-[#B4B7F8] hover:underline flex items-center gap-1"
           >
             키 발급받기 <ExternalLink className="w-3 h-3" />
           </a>
@@ -121,7 +121,7 @@ export default function Settings() {
         </div>
 
         {geminiStatus === 'valid' && (
-          <p className="text-xs text-emerald-600 dark:text-emerald-400 mt-1.5 flex items-center gap-1">
+          <p className="text-xs font-semibold text-[#1E9950] dark:text-[#8BE8AC] mt-1.5 flex items-center gap-1">
             <CheckCircle className="w-3 h-3" /> 유효한 API 키입니다.
           </p>
         )}
@@ -152,9 +152,9 @@ export default function Settings() {
       {/* Flow stub */}
       <div className="wizard-card mb-4 border-dashed border-2 border-slate-200 dark:border-slate-700 opacity-60">
         <div className="flex items-center gap-2 mb-2">
-          <Key className="w-5 h-5 text-purple-400" />
-          <h2 className="font-semibold text-slate-700 dark:text-slate-400">Google Flow 연동</h2>
-          <span className="ml-auto text-xs bg-slate-100 dark:bg-slate-800 text-slate-500 px-2 py-0.5 rounded-full">준비 중</span>
+          <Key className="w-5 h-5 text-slate-400" />
+          <h2 className="font-bold text-slate-700 dark:text-slate-400">Google Flow 연동</h2>
+          <span className="ml-auto text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 px-2 py-0.5 rounded-full">준비 중</span>
         </div>
         <p className="text-xs text-slate-500 dark:text-slate-400">
           이 버전에서는 Flow 연동을 사용하지 않습니다. 향후 업데이트에서 지원될 예정입니다.
@@ -165,15 +165,15 @@ export default function Settings() {
       <div className="wizard-card mb-6">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h3 className="font-semibold text-slate-900 dark:text-white">데모 모드 (Mock)</h3>
+            <h3 className="font-black text-slate-900 dark:text-white">데모 모드 (Mock)</h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
               API 키 없이 샘플 데이터로 모든 기능을 체험할 수 있습니다.
               Gemini API 키를 입력하면 자동으로 실제 모드로 전환됩니다.
             </p>
           </div>
-          <div className={`mt-0.5 shrink-0 w-4 h-4 rounded-full ${form.geminiApiKey ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+          <div className={`mt-0.5 shrink-0 w-4 h-4 rounded-full ${form.geminiApiKey ? 'bg-[#8BE8AC]' : 'bg-[#F79A4D]'}`} />
         </div>
-        <p className="text-xs mt-2 text-slate-400 dark:text-slate-500 flex items-center gap-1">
+        <p className="text-xs mt-2 font-semibold text-slate-400 dark:text-slate-500 flex items-center gap-1">
           <Info className="w-3 h-3" />
           현재 상태: {form.geminiApiKey ? '실제 Gemini API 사용' : '데모 모드 (Mock)'}
         </p>

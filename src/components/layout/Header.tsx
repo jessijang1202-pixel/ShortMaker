@@ -23,11 +23,11 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-3">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 shrink-0">
-          <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-sm">
-            <Film className="w-4 h-4 text-white" />
+          <div className="w-8 h-8 bg-[#241E3C] rounded-xl flex items-center justify-center shadow-sm">
+            <Film className="w-4 h-4 text-[#8BE8AC]" />
           </div>
-          <span className="font-bold text-slate-900 dark:text-white text-sm sm:text-base hidden xs:block">
-            SnapReel
+          <span className="brand-wordmark text-sm sm:text-base hidden xs:block">
+            <span className="text-[#241E3C] dark:text-white">Snap</span><span className="text-[#8489F2]">Reel</span>
           </span>
         </Link>
 

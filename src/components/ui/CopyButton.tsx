@@ -33,9 +33,9 @@ export default function CopyButton({ text, label = '복사', className }: CopyBu
     <button
       onClick={handleCopy}
       className={clsx(
-        'inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-lg transition-all duration-200',
+        'inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1.5 rounded-xl transition-all duration-200',
         copied
-          ? 'bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300'
+          ? 'bg-[#DBF7E5] dark:bg-[#8BE8AC]/15 text-[#1E9950] dark:text-[#8BE8AC]'
           : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600',
         className,
       )}

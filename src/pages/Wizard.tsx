@@ -94,23 +94,23 @@ export default function Wizard() {
         )}
 
         {/* 저장 바 */}
-        <div className="flex items-center justify-between gap-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5">
+        <div className="flex items-center justify-between gap-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-2.5">
           <span className="text-xs text-slate-500 dark:text-slate-400 truncate">
             {currentProjectId
-              ? <><span className="font-medium text-slate-700 dark:text-slate-300">{session.planning?.topic ?? '저장됨'}</span></>
+              ? <><span className="font-bold text-slate-700 dark:text-slate-300">{session.planning?.topic ?? '저장됨'}</span></>
               : '저장되지 않은 프로젝트'}
           </span>
           <div className="flex items-center gap-2 shrink-0">
             <button onClick={() => setDrawerOpen(true)}
-              className="flex items-center gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-violet-600 dark:hover:text-violet-400 px-2 py-1.5 rounded-lg hover:bg-violet-50 dark:hover:bg-violet-950/30 transition-colors">
+              className="flex items-center gap-1.5 text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-[#5157D8] dark:hover:text-[#B4B7F8] px-2 py-1.5 rounded-xl hover:bg-[#ECEDFD] dark:hover:bg-[#8489F2]/10 transition-colors">
               <FolderOpen className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">작업 내역</span>
             </button>
             <button onClick={handleSave} disabled={!canSave || saveStatus === 'saving'}
-              className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors ${
-                saveStatus === 'saved'  ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300'
+              className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-xl transition-colors ${
+                saveStatus === 'saved'  ? 'bg-[#DBF7E5] dark:bg-[#8BE8AC]/15 text-[#1E9950] dark:text-[#8BE8AC]'
                 : saveStatus === 'error' ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
-                : 'bg-violet-600 hover:bg-violet-700 text-white disabled:opacity-50'
+                : 'bg-[#8489F2] hover:bg-[#6D72E0] text-white disabled:opacity-50'
               }`}>
               {saveStatus === 'saving' && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
               {saveStatus === 'saved'  && <CheckCircle className="w-3.5 h-3.5" />}

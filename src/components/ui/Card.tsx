@@ -24,7 +24,7 @@ export default function Card({
 }: CardProps) {
   return (
     <div
-      className={clsx('rounded-2xl', variantStyles[variant], paddingStyles[padding], className)}
+      className={clsx('rounded-3xl', variantStyles[variant], paddingStyles[padding], className)}
       {...rest}
     >
       {children}

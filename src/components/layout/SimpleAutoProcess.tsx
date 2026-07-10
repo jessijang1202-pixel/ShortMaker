@@ -212,26 +212,26 @@ export default function SimpleAutoProcess({ onError }: Props) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/80 backdrop-blur-sm">
-      <div className="w-full max-w-md mx-4 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+      <div className="w-full max-w-md mx-4 bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
 
         {/* Header */}
-        <div className="bg-gradient-to-br from-violet-600 to-indigo-600 px-6 pt-6 pb-5 text-white">
+        <div className="bg-[#241E3C] px-6 pt-6 pb-5 text-white">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center shrink-0">
-              <Sparkles className="w-5 h-5" />
+            <div className="w-10 h-10 bg-[#8BE8AC] rounded-2xl flex items-center justify-center shrink-0">
+              <Sparkles className="w-5 h-5 text-[#14351F]" />
             </div>
             <div>
-              <h2 className="font-bold text-lg leading-tight">AI가 자동 제작 중</h2>
-              <p className="text-sm text-violet-200">레퍼런스 스타일에 맞춰 20초 숏폼을 만듭니다</p>
+              <h2 className="font-black text-lg leading-tight">AI가 자동 제작 중</h2>
+              <p className="text-sm text-slate-300">레퍼런스 스타일에 맞춰 20초 숏폼을 만듭니다</p>
             </div>
           </div>
-          <div className="bg-white/20 rounded-full h-1.5 mt-2">
+          <div className="bg-white/15 rounded-full h-1.5 mt-2">
             <div
-              className="bg-white h-full rounded-full transition-all duration-700"
+              className="bg-[#8BE8AC] h-full rounded-full transition-all duration-700"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <p className="text-right text-xs text-violet-200 mt-1">{progress}%</p>
+          <p className="text-right text-xs text-slate-300 mt-1">{progress}%</p>
         </div>
 
         {/* Task list */}
@@ -247,13 +247,13 @@ export default function SimpleAutoProcess({ onError }: Props) {
               >
                 <div className="shrink-0 mt-0.5 w-5 h-5 flex items-center justify-center">
                   {status === 'done' && (
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                    <CheckCircle2 className="w-5 h-5 text-[#1E9950]" />
                   )}
                   {status === 'warn' && (
-                    <AlertTriangle className="w-5 h-5 text-amber-500" />
+                    <AlertTriangle className="w-5 h-5 text-[#F79A4D]" />
                   )}
                   {status === 'running' && (
-                    <Loader2 className="w-5 h-5 text-violet-500 animate-spin" />
+                    <Loader2 className="w-5 h-5 text-[#8489F2] animate-spin" />
                   )}
                   {status === 'pending' && (
                     <div className="w-4 h-4 rounded-full border-2 border-slate-300 dark:border-slate-600" />
@@ -261,9 +261,9 @@ export default function SimpleAutoProcess({ onError }: Props) {
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <p className={`text-sm font-semibold leading-tight ${
-                    status === 'done'    ? 'text-emerald-600 dark:text-emerald-400 line-through' :
-                    status === 'running' ? 'text-violet-700 dark:text-violet-300' :
+                  <p className={`text-sm font-bold leading-tight ${
+                    status === 'done'    ? 'text-[#1E9950] dark:text-[#8BE8AC] line-through' :
+                    status === 'running' ? 'text-[#5157D8] dark:text-[#B4B7F8]' :
                                           'text-slate-400 dark:text-slate-500'
                   }`}>
                     {task.label}
@@ -282,12 +282,12 @@ export default function SimpleAutoProcess({ onError }: Props) {
         {doneAll && (
           <div className="px-6 pb-6 space-y-2">
             {warnings.map((w, i) => (
-              <p key={i} className="flex items-start gap-1.5 text-xs text-amber-600 dark:text-amber-400">
+              <p key={i} className="flex items-start gap-1.5 text-xs text-[#B0621E] dark:text-[#F79A4D]">
                 <AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
                 {w}
               </p>
             ))}
-            <p className="text-center text-sm font-semibold text-emerald-600 dark:text-emerald-400 animate-pulse">
+            <p className="text-center text-sm font-bold text-[#1E9950] dark:text-[#8BE8AC] animate-pulse">
               모든 작업 완료! 스토리보드로 이동합니다...
             </p>
           </div>

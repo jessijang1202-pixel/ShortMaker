@@ -137,23 +137,23 @@ export default function StepReviewPanel({ currentStep, onConfirm, onEdit, onRege
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/70 backdrop-blur-sm p-4">
-      <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+      <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden">
 
         {/* Header */}
-        <div className="bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-5 text-white">
+        <div className="bg-[#241E3C] px-6 py-5 text-white">
           <div className="flex items-center gap-2 mb-1">
-            <ShieldCheck className="w-5 h-5 opacity-80" />
-            <span className="text-xs font-semibold opacity-80 uppercase tracking-wider">
+            <ShieldCheck className="w-5 h-5 text-[#8489F2]" />
+            <span className="text-xs font-bold text-[#B4B7F8] uppercase tracking-wider">
               {config.stepNo}단계 검토
             </span>
           </div>
-          <h2 className="text-lg font-bold leading-tight">{config.stepTitle}</h2>
-          <p className="text-sm text-indigo-200 mt-0.5">다음 단계로 이동하기 전에 확인해 주세요</p>
+          <h2 className="text-lg font-black leading-tight">{config.stepTitle}</h2>
+          <p className="text-sm text-slate-300 mt-0.5">다음 단계로 이동하기 전에 확인해 주세요</p>
         </div>
 
         {/* Checklist */}
         <div className="px-6 py-5 space-y-3">
-          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+          <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
             체크 항목
           </p>
           {config.checks.map(item => (
@@ -165,7 +165,7 @@ export default function StepReviewPanel({ currentStep, onConfirm, onEdit, onRege
             >
               <div className="shrink-0 mt-0.5">
                 {checked[item.id]
-                  ? <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                  ? <CheckCircle2 className="w-5 h-5 text-[#1E9950]" />
                   : <Circle className="w-5 h-5 text-slate-300 dark:text-slate-600 group-hover:text-slate-400" />
                 }
               </div>
@@ -181,9 +181,9 @@ export default function StepReviewPanel({ currentStep, onConfirm, onEdit, onRege
         </div>
 
         {/* Confirm prompt */}
-        <div className="mx-6 mb-5 bg-indigo-50 dark:bg-indigo-950/30 border border-indigo-200 dark:border-indigo-800 rounded-xl px-4 py-3">
-          <p className="text-xs font-semibold text-indigo-700 dark:text-indigo-300 mb-1">확인 요청</p>
-          <p className="text-sm text-indigo-800 dark:text-indigo-200 leading-relaxed">{config.confirmPrompt}</p>
+        <div className="mx-6 mb-5 bg-[#ECEDFD] dark:bg-[#8489F2]/10 border-2 border-[#C7C9FA] dark:border-[#8489F2]/30 rounded-2xl px-4 py-3">
+          <p className="text-xs font-bold text-[#5157D8] dark:text-[#B4B7F8] mb-1">확인 요청</p>
+          <p className="text-sm text-[#3D42B0] dark:text-[#DEDFFC] leading-relaxed">{config.confirmPrompt}</p>
         </div>
 
         {/* Actions */}
@@ -192,9 +192,9 @@ export default function StepReviewPanel({ currentStep, onConfirm, onEdit, onRege
           <button
             onClick={onConfirm}
             disabled={!allChecked}
-            className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl font-semibold text-sm transition-all ${
+            className={`w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-sm transition-all ${
               allChecked
-                ? 'bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white shadow-md'
+                ? 'bg-[#8BE8AC] hover:bg-[#6FE097] active:scale-[0.98] text-[#14351F] shadow-md'
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed'
             }`}
           >
@@ -207,7 +207,7 @@ export default function StepReviewPanel({ currentStep, onConfirm, onEdit, onRege
             {/* 수정 요청 */}
             <button
               onClick={onEdit}
-              className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+              className="flex items-center justify-center gap-1.5 py-2.5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 text-sm font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
             >
               <Edit3 className="w-3.5 h-3.5" />
               수정 요청
@@ -217,13 +217,13 @@ export default function StepReviewPanel({ currentStep, onConfirm, onEdit, onRege
             {config.canRegenerate ? (
               <button
                 onClick={onRegenerate}
-                className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl border border-amber-200 dark:border-amber-800 text-sm font-medium text-amber-700 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/30 transition-colors"
+                className="flex items-center justify-center gap-1.5 py-2.5 rounded-2xl border-2 border-[#F79A4D]/40 text-sm font-bold text-[#B0621E] dark:text-[#F79A4D] hover:bg-[#FDEBD7] dark:hover:bg-[#F79A4D]/10 transition-colors"
               >
                 <RefreshCcw className="w-3.5 h-3.5" />
                 다시 만들기
               </button>
             ) : (
-              <div className="flex items-center justify-center py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/50 text-xs text-slate-400 dark:text-slate-500">
+              <div className="flex items-center justify-center py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 text-xs text-slate-400 dark:text-slate-500">
                 재생성 불가
               </div>
             )}

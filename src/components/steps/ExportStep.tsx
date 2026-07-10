@@ -144,14 +144,14 @@ export default function ExportStep() {
       </Alert>
 
       {/* Hero video download */}
-      <div className="rounded-2xl overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 p-5 space-y-4 shadow-lg">
+      <div className="rounded-3xl overflow-hidden bg-[#241E3C] p-5 space-y-4 shadow-lg">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center shrink-0">
+          <div className="w-12 h-12 bg-[#8489F2] rounded-2xl flex items-center justify-center shrink-0">
             <Video className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-white">숏츠 영상 다운로드</h3>
-            <p className="text-sm text-blue-100 mt-0.5">
+            <h3 className="text-lg font-black text-white">숏츠 영상 다운로드</h3>
+            <p className="text-sm text-slate-300 mt-0.5">
               {veoClip?.videoUrl
                 ? '초반부 영상이 준비되었습니다'
                 : '초반부 영상을 먼저 생성하거나 업로드하세요'}
@@ -162,19 +162,19 @@ export default function ExportStep() {
         {veoClip?.videoUrl ? (
           <button
             onClick={() => downloadDataUrl(veoClip.videoUrl!, '숏츠_영상.mp4')}
-            className="w-full bg-white text-blue-700 font-bold py-4 rounded-2xl flex items-center justify-center gap-2.5 text-base hover:bg-blue-50 active:scale-[0.98] transition-all shadow-md"
+            className="w-full bg-[#8BE8AC] text-[#14351F] font-black py-4 rounded-2xl flex items-center justify-center gap-2.5 text-base hover:bg-[#6FE097] active:scale-[0.98] transition-all shadow-md"
           >
             <Download className="w-5 h-5" />
             숏츠 영상 다운로드
           </button>
         ) : (
-          <div className="w-full bg-white/20 text-white/60 font-medium py-4 rounded-2xl flex items-center justify-center gap-2 text-sm cursor-not-allowed select-none">
+          <div className="w-full bg-white/10 text-white/50 font-bold py-4 rounded-2xl flex items-center justify-center gap-2 text-sm cursor-not-allowed select-none">
             <Download className="w-5 h-5" />
             영상 없음 — 초반부 영상 단계로 돌아가세요
           </div>
         )}
 
-        <p className="text-xs text-blue-200 leading-relaxed">
+        <p className="text-xs text-slate-400 leading-relaxed">
           후반부 슬라이드 이미지는 아래 '슬라이드 이미지' 섹션에서 개별 저장하세요
         </p>
       </div>

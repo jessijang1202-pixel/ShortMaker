@@ -96,7 +96,7 @@ function MediaUploadSection() {
               className={clsx(
                 'w-full aspect-video rounded-xl border-2 border-dashed flex flex-col items-center justify-center gap-2 transition-colors text-slate-400',
                 videoDrag
-                  ? 'border-violet-400 bg-violet-50 dark:bg-violet-950/20 text-violet-500'
+                  ? 'border-[#8489F2] bg-[#ECEDFD] dark:bg-[#8489F2]/15 text-[#5157D8]'
                   : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800/50',
               )}
             >
@@ -147,7 +147,7 @@ function MediaUploadSection() {
                 className={clsx(
                   'aspect-square rounded-lg border-2 border-dashed flex flex-col items-center justify-center gap-1 transition-colors text-slate-400',
                   photoDrag
-                    ? 'border-violet-400 bg-violet-50 dark:bg-violet-950/20 text-violet-500'
+                    ? 'border-[#8489F2] bg-[#ECEDFD] dark:bg-[#8489F2]/15 text-[#5157D8]'
                     : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800/50',
                 )}
               >
@@ -264,7 +264,7 @@ export default function IdeaStep() {
                       </div>
                     </div>
                     <div className="flex items-start gap-1.5">
-                      <Users className="w-3.5 h-3.5 text-indigo-500 shrink-0 mt-0.5" />
+                      <Users className="w-3.5 h-3.5 text-[#8489F2] shrink-0 mt-0.5" />
                       <div>
                         <p className="text-xs font-medium text-slate-500 dark:text-slate-400">타겟 대상</p>
                         <p className="text-xs text-slate-700 dark:text-slate-300">{idea.target_audience}</p>

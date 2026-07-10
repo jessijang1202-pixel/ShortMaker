@@ -71,10 +71,10 @@ function ReferenceSection() {
   const analyzing = reference.status === 'generating';
 
   return (
-    <div className="wizard-card space-y-3 border-2 border-violet-200 dark:border-violet-800">
+    <div className="wizard-card space-y-3 border-2 border-[#C7C9FA] dark:border-[#8489F2]/40">
       <div className="flex items-center justify-between">
         <label className="section-label flex items-center gap-1.5">
-          <Clapperboard className="w-4 h-4 text-violet-500" />
+          <Clapperboard className="w-4 h-4 text-[#8489F2]" />
           레퍼런스 영상 (선택)
         </label>
         {(reference.url || reference.fileName || reference.analysis) && (
@@ -108,7 +108,7 @@ function ReferenceSection() {
       {/* File upload */}
       <div className="flex items-center gap-2">
         <button type="button" onClick={() => fileRef.current?.click()} disabled={analyzing}
-          className="flex items-center gap-1.5 text-xs font-medium text-violet-600 dark:text-violet-400 hover:underline disabled:opacity-50">
+          className="flex items-center gap-1.5 text-xs font-bold text-[#5157D8] dark:text-[#B4B7F8] hover:underline disabled:opacity-50">
           <Video className="w-3.5 h-3.5" />
           또는 영상 파일 업로드 (최대 15MB)
         </button>
@@ -121,7 +121,7 @@ function ReferenceSection() {
 
       {/* Status */}
       {analyzing && (
-        <div className="flex items-center gap-2 text-sm text-violet-600 dark:text-violet-400 bg-violet-50 dark:bg-violet-950/30 rounded-xl px-3 py-2.5">
+        <div className="flex items-center gap-2 text-sm font-semibold text-[#5157D8] dark:text-[#B4B7F8] bg-[#ECEDFD] dark:bg-[#8489F2]/10 rounded-2xl px-3 py-2.5">
           <Loader2 className="w-4 h-4 animate-spin shrink-0" />
           AI가 레퍼런스 영상의 스타일을 분석하고 있습니다...
         </div>
