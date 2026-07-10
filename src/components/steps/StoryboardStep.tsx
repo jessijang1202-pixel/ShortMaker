@@ -22,6 +22,7 @@ function buildSegments(scriptSplit: NonNullable<ReturnType<typeof useApp>['sessi
     narration: veo.text,
     textPosition: veo.textPosition,
     textSize: veo.textSize,
+    captions: veo.captions,
   });
   t += veo.duration;
 
@@ -137,16 +138,35 @@ export default function StoryboardStep() {
                 // veo 클립에 수동 지정된 값이 있으면(고급 모드) 그것을 우선한다.
                 const posClass = subtitlePositionClass(activeSeg.textPosition ?? narration?.subtitlePosition);
                 const sizeClass = subtitleSizeClass(activeSeg.textSize ?? narration?.subtitleSize);
-                const caption = subtitleEnabled && activeSeg.on_screen_text ? (
-                  <div className={`absolute left-0 right-0 px-3 pointer-events-none ${posClass}`}>
-                    <p
-                      className={`text-white text-center leading-snug whitespace-pre-line ${sizeClass}`}
-                      style={subtitleStyle}
-                    >
-                      {activeSeg.on_screen_text}
-                    </p>
-                  </div>
-                ) : null;
+
+                let caption: React.ReactNode = null;
+                if (subtitleEnabled && activeSeg.type === 'veo' && activeSeg.captions?.length) {
+                  // 훅 구간: 짧은 캡션 버스트를 시간에 맞춰 하나씩, 임팩트 있게 노출
+                  const relTime = currentTime - activeSeg.startTime;
+                  const burst = activeSeg.captions.find(c => relTime >= c.start && relTime < c.end)
+                    ?? activeSeg.captions[0];
+                  caption = burst ? (
+                    <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 px-4 flex justify-center pointer-events-none">
+                      <span
+                        key={burst.text}
+                        className="fade-in inline-block bg-[var(--brand-primary)] text-[var(--brand-primary-on)] font-black text-sm px-3 py-1.5 rounded-xl shadow-lg text-center leading-snug"
+                      >
+                        {burst.text}
+                      </span>
+                    </div>
+                  ) : null;
+                } else if (subtitleEnabled && activeSeg.on_screen_text) {
+                  caption = (
+                    <div className={`absolute left-0 right-0 px-3 pointer-events-none ${posClass}`}>
+                      <p
+                        className={`text-white text-center leading-snug whitespace-pre-line ${sizeClass}`}
+                        style={subtitleStyle}
+                      >
+                        {activeSeg.on_screen_text}
+                      </p>
+                    </div>
+                  );
+                }
 
                 if (activeSeg.type === 'veo') {
                   return activeSeg.videoUrl ? (

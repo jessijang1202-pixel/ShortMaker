@@ -67,6 +67,13 @@ export const DEMO_SCRIPT_SPLIT: ScriptSplit = {
     prompt: 'Vertical 9:16 short-form video clip, 9 seconds. Korean person in their late 20s sitting at a tidy desk in the early morning, soft warm lamp light, speaking to camera in a calm and friendly tone. Minimal aesthetic room background, a glass of water on the desk. Authentic vlog style, gentle handheld camera, warm morning color grading.',
     duration: 9,
     status: 'idle',
+    captions: [
+      { text: '새벽 5시', start: 0, end: 1.2 },
+      { text: '당신은 지금 뭐 하세요?', start: 1.2, end: 3.0 },
+      { text: '저는 3년째', start: 3.0, end: 4.3 },
+      { text: '새벽 5시 기상', start: 4.3, end: 6.0 },
+      { text: '처음엔 알람 5번', start: 6.0, end: 9.0 },
+    ],
   },
 
   slide_scenes: [

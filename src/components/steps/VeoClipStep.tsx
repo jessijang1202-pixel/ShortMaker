@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ChevronRight, ChevronLeft, Video, Play, RefreshCcw, AlertCircle, CheckCircle, Loader2, Upload } from 'lucide-react';
 import { useApp } from '../../store/AppContext';
-import type { TextPosition, TextSize } from '../../types';
+import type { TextPosition, TextSize, CaptionBurst } from '../../types';
 import Button from '../ui/Button';
 import Alert from '../ui/Alert';
 import { mockGenerateVeoClip } from '../../services/mock.service';
@@ -19,12 +19,35 @@ function getSizeClass(size: TextSize | undefined) {
   return 'text-xs font-semibold';
 }
 
-function VideoWithOverlay({ videoUrl, text, position, size }: {
+function VideoWithOverlay({ videoUrl, text, position, size, captions }: {
   videoUrl: string;
   text: string;
   position: TextPosition | undefined;
   size: TextSize | undefined;
+  captions: CaptionBurst[] | undefined;
 }) {
+  const [time, setTime] = useState(0);
+
+  if (captions?.length) {
+    const burst = captions.find(c => time >= c.start && time < c.end) ?? captions[0];
+    return (
+      <div className="relative rounded-xl overflow-hidden bg-black aspect-[9/16] max-h-80 mx-auto max-w-[180px]">
+        <video
+          src={videoUrl} controls loop playsInline className="w-full h-full object-cover"
+          onTimeUpdate={e => setTime(e.currentTarget.currentTime)}
+        />
+        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 px-3 flex justify-center pointer-events-none">
+          <span
+            key={burst.text}
+            className="fade-in inline-block bg-[var(--brand-primary)] text-[var(--brand-primary-on)] font-black text-xs px-2.5 py-1 rounded-lg shadow-lg text-center leading-snug"
+          >
+            {burst.text}
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="relative rounded-xl overflow-hidden bg-black aspect-[9/16] max-h-80 mx-auto max-w-[180px]">
       <video src={videoUrl} controls loop playsInline className="w-full h-full object-cover" />
@@ -141,7 +164,7 @@ export default function VeoClipStep() {
 
   function handleSkip() {
     if (!clip) return;
-    updateVeoClip({ text: clip.text, prompt: clip.prompt, duration: clip.duration, status: 'done' });
+    updateVeoClip({ ...clip, status: 'done' });
     setStep('slides');
   }
 
@@ -200,6 +223,7 @@ export default function VeoClipStep() {
               text={clip.text}
               position={clip.textPosition}
               size={clip.textSize}
+              captions={clip.captions}
             />
             <TextOverlayControls
               position={clip.textPosition}

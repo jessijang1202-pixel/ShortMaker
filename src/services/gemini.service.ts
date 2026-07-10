@@ -4,6 +4,7 @@ import {
   buildIdeaPrompt, buildHookPrompt, buildScriptSplitPrompt,
   buildImageAnalysisPrompt, buildUploadCopyPrompt,
 } from '../prompts';
+import { sanitizeCaptionBursts } from '../utils/captionBursts';
 
 // gemini-2.0-flash-exp는 2026-06-01 서비스 종료 → 2.5 Flash로 마이그레이션
 const MODEL_ID = 'gemini-2.5-flash';
@@ -39,14 +40,17 @@ export async function generateScriptSplit(
   style?: ReferenceStyle | null,
 ): Promise<ScriptSplit> {
   const raw = await generateJSON<any>(apiKey, buildScriptSplitPrompt(p, idea, hook, style));
+  const veoText = raw.veo_core_clip?.text ?? '';
+  const veoDuration = raw.veo_core_clip?.duration ?? 8;
   return {
     full_script: raw.full_script ?? '',
     structure: raw.structure ?? { problem: '', empathy: '', solution: '', action: '' },
     veo_core_clip: {
-      text: raw.veo_core_clip?.text ?? '',
+      text: veoText,
       prompt: raw.veo_core_clip?.prompt ?? '',
-      duration: raw.veo_core_clip?.duration ?? 8,
+      duration: veoDuration,
       status: 'idle',
+      captions: sanitizeCaptionBursts(raw.veo_core_clip?.captions, veoText, veoDuration),
     },
     slide_scenes: (raw.slide_scenes ?? []).map((s: any) => ({
       scene_id: s.scene_id ?? `slide_${Math.random().toString(36).slice(2)}`,

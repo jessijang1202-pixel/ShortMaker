@@ -129,6 +129,11 @@ ${styleCtx(style)}
      * 세로 9:16 비율
      * 위 스타일 가이드의 컨셉·색감·무드를 반드시 반영
      * 특정 브랜드 로고나 심벌 없이
+   - captions (매우 중요 — 훅 구간은 영상의 첫인상이라 임팩트가 핵심):
+     * text를 그대로 화면에 띄우지 말 것. 3~6개의 짧은 조각(캡션 버스트)으로 쪼갤 것
+     * 각 조각은 2~5단어, 한눈에 읽히는 길이 (긴 문장 절대 금지)
+     * 조각들의 start/end는 0초부터 duration까지 빈틈없이 이어질 것 (겹치거나 비는 구간 없이)
+     * 가장 강력한 키워드가 담긴 조각을 앞쪽에 배치해 첫 1초 안에 시선을 끌 것
 
 2) slide_scenes (남은 22초, 반드시 6개 장면):
    - 각 장면은 3-4초 내외 (6개 × 3-4초 = 총 22초)
@@ -153,7 +158,11 @@ ${styleCtx(style)}
   "veo_core_clip": {
     "text": "훅+문제+공감 핵심 요약 (8초 분량)",
     "prompt": "English Veo prompt: vertical 9:16, matching the style guide mood and colors...",
-    "duration": 8
+    "duration": 8,
+    "captions": [
+      { "text": "짧고 강렬한 조각 1", "start": 0, "end": 1.3 },
+      { "text": "짧고 강렬한 조각 2", "start": 1.3, "end": 2.8 }
+    ]
   },
   "slide_scenes": [
     {

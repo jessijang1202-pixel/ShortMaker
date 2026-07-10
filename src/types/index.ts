@@ -67,6 +67,12 @@ export interface HookOption {
 export type TextPosition = 'top' | 'center' | 'bottom';
 export type TextSize = 'large' | 'medium' | 'small';
 
+export interface CaptionBurst {
+  text: string;   // 2~5단어 내외의 짧고 강렬한 캡션 조각
+  start: number;  // 클립 시작 기준 초
+  end: number;
+}
+
 export interface VeoCoreClip {
   text: string;             // spoken narration for the 8-10s clip
   prompt: string;           // full Veo generation prompt (English)
@@ -76,6 +82,7 @@ export interface VeoCoreClip {
   errorMessage?: string;
   textPosition?: TextPosition;  // overlay text position on video
   textSize?: TextSize;           // overlay text size on video
+  captions?: CaptionBurst[];     // 훅 구간에 순차 노출되는 짧은 임팩트 캡션들
 }
 
 export interface SlideScene {
@@ -115,6 +122,7 @@ export interface StoryboardSegment {
   narration?: string;
   textPosition?: TextPosition;
   textSize?: TextSize;
+  captions?: CaptionBurst[];
 }
 
 // ─── Upload Copy ──────────────────────────────────────────────────────────────
