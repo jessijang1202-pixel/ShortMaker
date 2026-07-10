@@ -41,7 +41,7 @@ export default function Home() {
           <br />
           <span className="relative inline-block mt-1">
             <span className="absolute inset-x-0 bottom-1 h-4 bg-[#8BE8AC] dark:bg-[#8BE8AC]/40 -z-10 rounded" />
-            AI가 20초 숏폼을 완성
+            AI가 30초 숏폼을 완성
           </span>
         </p>
 
@@ -121,7 +121,7 @@ export default function Home() {
       <div className="rounded-[2rem] bg-[#F79A4D] p-7 mb-10 shadow-[0_8px_30px_rgba(247,154,77,0.4)]">
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>
-            <p className="text-3xl font-black text-white">20초</p>
+            <p className="text-3xl font-black text-white">30초</p>
             <p className="text-xs font-semibold text-[#7A3D0E] mt-1">완성 영상 길이</p>
           </div>
           <div>
@@ -129,7 +129,7 @@ export default function Home() {
             <p className="text-xs font-semibold text-[#7A3D0E] mt-1">Veo AI 영상<br />+ 음악·효과음</p>
           </div>
           <div>
-            <p className="text-3xl font-black text-white">12초</p>
+            <p className="text-3xl font-black text-white">22초</p>
             <p className="text-xs font-semibold text-[#7A3D0E] mt-1">내 사진·영상<br />또는 AI 이미지</p>
           </div>
         </div>
@@ -156,7 +156,7 @@ export default function Home() {
       </div>
 
       <p className="text-center text-xs text-slate-400 dark:text-slate-600 mt-10">
-        SnapReel — 누구나 20초 크리에이터
+        SnapReel — 누구나 30초 크리에이터
       </p>
     </div>
   );

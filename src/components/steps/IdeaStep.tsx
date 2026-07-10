@@ -14,7 +14,7 @@ import { mockGenerateIdeas } from '../../services/mock.service';
 
 // ─── Media Upload section (simple mode only) ───────────────────────────────────
 
-const MAX_PHOTOS = 5;
+const MAX_PHOTOS = 6;
 
 function MediaUploadSection() {
   const { preUploadedAssets, setPreUploadedAssets } = useApp();

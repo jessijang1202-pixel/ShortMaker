@@ -107,7 +107,7 @@ export function buildScriptSplitPrompt(
 ): string {
   return `
 당신은 숏폼 대본 작가입니다.
-20초 숏폼 영상 대본을 작성하고, Veo AI 클립(0-8초)과 슬라이드(8-20초)로 분리해주세요.
+30초 숏폼 영상 대본을 작성하고, Veo AI 클립(0-8초)과 슬라이드(8-30초)로 분리해주세요.
 
 ${ctx(p)}
 ${styleCtx(style)}
@@ -130,8 +130,8 @@ ${styleCtx(style)}
      * 위 스타일 가이드의 컨셉·색감·무드를 반드시 반영
      * 특정 브랜드 로고나 심벌 없이
 
-2) slide_scenes (남은 12초, 반드시 4개 장면):
-   - 각 장면은 3초 (4개 × 3초 = 총 12초)
+2) slide_scenes (남은 22초, 반드시 6개 장면):
+   - 각 장면은 3-4초 내외 (6개 × 3-4초 = 총 22초)
    - on_screen_text: 화면에 크게 표시할 1-2줄
    - narration_text: 추가 나레이션
    - visual_description: 이미지 생성용 설명 (영어) — 스타일 가이드의 색감·무드 반영
@@ -162,7 +162,7 @@ ${styleCtx(style)}
       "on_screen_text": "화면에 크게 표시될 1-2줄",
       "narration_text": "나레이션 텍스트",
       "visual_description": "English image prompt for AI generation, matching the style guide",
-      "duration_seconds": 3
+      "duration_seconds": 4
     }
   ]
 }

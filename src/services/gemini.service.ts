@@ -54,7 +54,7 @@ export async function generateScriptSplit(
       on_screen_text: s.on_screen_text ?? '',
       narration_text: s.narration_text ?? '',
       visual_description: s.visual_description ?? '',
-      duration_seconds: s.duration_seconds ?? 3,
+      duration_seconds: s.duration_seconds ?? 4,
       imageStatus: 'idle' as const,
     })),
   };

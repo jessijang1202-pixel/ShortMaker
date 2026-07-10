@@ -30,9 +30,9 @@ type TaskStatus = 'pending' | 'running' | 'done' | 'warn';
 const TASKS = [
   { id: 'style',    label: '스타일 분석',          desc: '레퍼런스 영상의 컨셉·색감·자막·BGM을 분석합니다' },
   { id: 'hooks',    label: '훅 라인 선택',          desc: 'AI가 시청자를 사로잡는 오프닝 문장을 선택합니다' },
-  { id: 'script',   label: '대본 구성 (20초)',      desc: 'Veo 8초 + 슬라이드 12초 타임라인으로 구성합니다' },
+  { id: 'script',   label: '대본 구성 (30초)',      desc: 'Veo 8초 + 슬라이드 22초 타임라인으로 구성합니다' },
   { id: 'veo',      label: 'AI 영상 생성 (8초)',    desc: 'Veo로 도입부 영상을 생성합니다' },
-  { id: 'slides',   label: '슬라이드 구성 (12초)',  desc: '업로드 미디어와 AI 이미지로 장면을 채웁니다' },
+  { id: 'slides',   label: '슬라이드 구성 (22초)',  desc: '업로드 미디어와 AI 이미지로 장면을 채웁니다' },
   { id: 'narration',label: '자막/나레이션 설정',     desc: '레퍼런스 스타일에 맞춰 자막과 목소리를 설정합니다' },
 ];
 
@@ -115,7 +115,7 @@ export default function SimpleAutoProcess({ onError }: Props) {
         mark(1, 'done');
         await pause(300);
 
-        // ── 2: 대본 분리 (8초 Veo + 12초 슬라이드) ───────────────────────
+        // ── 2: 대본 분리 (8초 Veo + 22초 슬라이드) ───────────────────────
         mark(2, 'running');
         const split = isMock
           ? await mockGenerateScriptSplit()
@@ -162,7 +162,7 @@ export default function SimpleAutoProcess({ onError }: Props) {
         mark(3, 'done');
         await pause(300);
 
-        // ── 4: 슬라이드 12초 — 업로드 사진 → 부족분 AI 이미지 ────────────
+        // ── 4: 슬라이드 22초 — 업로드 사진 → 부족분 AI 이미지 ────────────
         mark(4, 'running');
         const scenes = split.slide_scenes;
         let photoIdx = 0;
@@ -222,7 +222,7 @@ export default function SimpleAutoProcess({ onError }: Props) {
             </div>
             <div>
               <h2 className="font-black text-lg leading-tight">AI가 자동 제작 중</h2>
-              <p className="text-sm text-slate-300">레퍼런스 스타일에 맞춰 20초 숏폼을 만듭니다</p>
+              <p className="text-sm text-slate-300">레퍼런스 스타일에 맞춰 30초 숏폼을 만듭니다</p>
             </div>
           </div>
           <div className="bg-white/15 rounded-full h-1.5 mt-2">
