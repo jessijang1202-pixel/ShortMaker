@@ -57,9 +57,9 @@ export default function HookStep() {
       {error && <Alert variant="error" onClose={() => setError('')}>{error}</Alert>}
 
       {session.selectedIdea && (
-        <div className="bg-[#ECEDFD] dark:bg-[#8489F2]/10 border-2 border-[#C7C9FA] dark:border-[#8489F2]/30 rounded-2xl px-4 py-3">
-          <p className="text-xs font-bold text-[#5157D8] dark:text-[#B4B7F8] mb-0.5">선택된 아이디어</p>
-          <p className="text-sm font-semibold text-[#3D42B0] dark:text-[#DEDFFC]">{session.selectedIdea.idea_title}</p>
+        <div className="bg-[var(--brand-soft-bg)] dark:bg-[var(--brand-soft-bg-dark)] border-2 border-[var(--brand-primary)]/30 rounded-2xl px-4 py-3">
+          <p className="text-xs font-bold text-[var(--brand-text)] dark:text-[var(--brand-text-dark)] mb-0.5">선택된 아이디어</p>
+          <p className="text-sm font-semibold text-[var(--brand-text)] dark:text-slate-100">{session.selectedIdea.idea_title}</p>
         </div>
       )}
 

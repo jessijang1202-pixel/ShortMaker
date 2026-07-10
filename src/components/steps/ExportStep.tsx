@@ -146,7 +146,7 @@ export default function ExportStep() {
       {/* Hero video download */}
       <div className="rounded-3xl overflow-hidden bg-[#241E3C] p-5 space-y-4 shadow-lg">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-[#8489F2] rounded-2xl flex items-center justify-center shrink-0">
+          <div className="w-12 h-12 bg-[var(--brand-primary)] rounded-2xl flex items-center justify-center shrink-0">
             <Video className="w-6 h-6 text-white" />
           </div>
           <div>

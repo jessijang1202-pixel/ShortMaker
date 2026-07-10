@@ -3,6 +3,28 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    /* 고급 영상 모드 기본값 — 메인화면 보라색(페리윙클) */
+    --brand-primary: #8489F2;
+    --brand-primary-hover: #6D72E0;
+    --brand-primary-on: #ffffff;
+    --brand-soft-bg: #ECEDFD;
+    --brand-soft-bg-dark: rgba(132, 137, 242, 0.12);
+    --brand-text: #5157D8;
+    --brand-text-dark: #B4B7F8;
+  }
+
+  /* 간단 영상 모드 — 메인화면 초록색(민트) */
+  .mode-simple {
+    --brand-primary: #8BE8AC;
+    --brand-primary-hover: #6FE097;
+    --brand-primary-on: #14351F;
+    --brand-soft-bg: #DBF7E5;
+    --brand-soft-bg-dark: rgba(139, 232, 172, 0.12);
+    --brand-text: #1E9950;
+    --brand-text-dark: #8BE8AC;
+  }
+
   *, *::before, *::after {
     box-sizing: border-box;
   }
@@ -39,19 +61,24 @@
     @apply w-full rounded-2xl border-2 border-slate-200 dark:border-slate-700
       bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100
       px-4 py-3 text-sm font-medium
-      focus:outline-none focus:ring-2 focus:ring-[#8489F2] focus:border-[#8489F2]
+      focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-[var(--brand-primary)]
       placeholder:text-slate-400 dark:placeholder:text-slate-500
       transition-all duration-200;
   }
 
   .selectable-card {
     @apply cursor-pointer rounded-2xl border-2 border-slate-200 dark:border-slate-700 p-4
-      transition-all duration-200 hover:border-[#8489F2] dark:hover:border-[#8489F2]
+      transition-all duration-200 hover:border-[var(--brand-primary)]
       hover:shadow-md hover:-translate-y-0.5;
   }
 
   .selectable-card.selected {
-    @apply border-[#8489F2] dark:border-[#8489F2] bg-[#ECEDFD] dark:bg-[#8489F2]/15 shadow-md -translate-y-0.5;
+    @apply shadow-md -translate-y-0.5;
+    border-color: var(--brand-primary);
+    background-color: var(--brand-soft-bg);
+  }
+  .dark .selectable-card.selected {
+    background-color: var(--brand-soft-bg-dark);
   }
 
   .section-label {

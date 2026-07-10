@@ -14,7 +14,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantStyles: Record<Variant, string> = {
-  primary:   'bg-[#8489F2] hover:bg-[#6D72E0] text-white border-transparent shadow-sm hover:shadow-md active:scale-[0.98]',
+  primary:   'bg-[var(--brand-primary)] hover:bg-[var(--brand-primary-hover)] text-[var(--brand-primary-on)] border-transparent shadow-sm hover:shadow-md active:scale-[0.98]',
   secondary: 'bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-100 border-transparent',
   ghost:     'bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-400 border-transparent',
   danger:    'bg-red-600 hover:bg-red-700 text-white border-transparent shadow-sm',
@@ -38,7 +38,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={disabled || loading}
         className={clsx(
           'inline-flex items-center justify-center font-bold border transition-all duration-200',
-          'disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 focus:outline-none focus:ring-2 focus:ring-[#8489F2] focus:ring-offset-2 dark:focus:ring-offset-slate-900',
+          'disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] focus:ring-offset-2 dark:focus:ring-offset-slate-900',
           variantStyles[variant],
           sizeStyles[size],
           className,

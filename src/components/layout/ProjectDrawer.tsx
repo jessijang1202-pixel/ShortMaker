@@ -68,7 +68,7 @@ export default function ProjectDrawer({ open, onClose, onLoad, onNew, currentPro
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-2">
-            <FolderOpen className="w-5 h-5 text-[#8489F2]" />
+            <FolderOpen className="w-5 h-5 text-[var(--brand-primary)]" />
             <h2 className="font-black text-slate-900 dark:text-white">내 작업 내역</h2>
           </div>
           <button onClick={onClose}
@@ -80,7 +80,7 @@ export default function ProjectDrawer({ open, onClose, onLoad, onNew, currentPro
         {/* New project button */}
         <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">
           <button onClick={() => { onNew(); onClose(); }}
-            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-2xl border-2 border-dashed border-[#8489F2]/50 dark:border-[#8489F2]/40 text-[#5157D8] dark:text-[#B4B7F8] hover:bg-[#ECEDFD] dark:hover:bg-[#8489F2]/10 text-sm font-bold transition-colors">
+            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-2xl border-2 border-dashed border-[var(--brand-primary)]/50 text-[var(--brand-text)] dark:text-[var(--brand-text-dark)] hover:bg-[var(--brand-soft-bg)] dark:hover:bg-[var(--brand-soft-bg-dark)] text-sm font-bold transition-colors">
             <Plus className="w-4 h-4" />새 프로젝트 시작
           </button>
         </div>
@@ -109,7 +109,7 @@ export default function ProjectDrawer({ open, onClose, onLoad, onNew, currentPro
             <div key={project.id}
               className={`rounded-2xl border-2 transition-colors ${
                 currentProjectId === project.id
-                  ? 'border-[#8489F2] bg-[#ECEDFD] dark:bg-[#8489F2]/10'
+                  ? 'border-[var(--brand-primary)] bg-[var(--brand-soft-bg)] dark:bg-[var(--brand-soft-bg-dark)]'
                   : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50'
               }`}>
               {/* 프로젝트 헤더 */}
@@ -150,7 +150,7 @@ export default function ProjectDrawer({ open, onClose, onLoad, onNew, currentPro
               {/* 액션 버튼 */}
               <div className="flex gap-2 px-4 pb-4">
                 <button onClick={() => handleLoad(project)}
-                  className="flex-1 flex items-center justify-center gap-1.5 text-xs font-bold py-1.5 rounded-xl bg-[#8489F2] hover:bg-[#6D72E0] text-white transition-colors">
+                  className="flex-1 flex items-center justify-center gap-1.5 text-xs font-bold py-1.5 rounded-xl bg-[var(--brand-primary)] hover:bg-[var(--brand-primary-hover)] text-[var(--brand-primary-on)] transition-colors">
                   <DownloadCloud className="w-3.5 h-3.5" />불러오기
                 </button>
                 <button onClick={e => handleDelete(project.id, e)} disabled={deleting === project.id}

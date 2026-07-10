@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import clsx from 'clsx';
 import { Save, CheckCircle, AlertCircle, FolderOpen, Loader2 } from 'lucide-react';
 import { useApp } from '../store/AppContext';
 import { WIZARD_STEPS, type WizardStep } from '../types';
@@ -78,7 +79,7 @@ export default function Wizard() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className={clsx('min-h-screen', videoMode === 'simple' && 'mode-simple')}>
       <WizardTopBar currentStep={currentStep} completedSteps={completed} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-3 space-y-2">
@@ -100,7 +101,7 @@ export default function Wizard() {
           </span>
           <div className="flex items-center gap-2 shrink-0">
             <button onClick={() => setDrawerOpen(true)}
-              className="flex items-center gap-1.5 text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-[#5157D8] dark:hover:text-[#B4B7F8] px-2 py-1.5 rounded-xl hover:bg-[#ECEDFD] dark:hover:bg-[#8489F2]/10 transition-colors">
+              className="flex items-center gap-1.5 text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-[var(--brand-text)] dark:hover:text-[var(--brand-text-dark)] px-2 py-1.5 rounded-xl hover:bg-[var(--brand-soft-bg)] dark:hover:bg-[var(--brand-soft-bg-dark)] transition-colors">
               <FolderOpen className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">작업 내역</span>
             </button>
@@ -108,7 +109,7 @@ export default function Wizard() {
               className={`flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-xl transition-colors ${
                 saveStatus === 'saved'  ? 'bg-[#DBF7E5] dark:bg-[#8BE8AC]/15 text-[#1E9950] dark:text-[#8BE8AC]'
                 : saveStatus === 'error' ? 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
-                : 'bg-[#8489F2] hover:bg-[#6D72E0] text-white disabled:opacity-50'
+                : 'bg-[var(--brand-primary)] hover:bg-[var(--brand-primary-hover)] text-[var(--brand-primary-on)] disabled:opacity-50'
               }`}>
               {saveStatus === 'saving' && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
               {saveStatus === 'saved'  && <CheckCircle className="w-3.5 h-3.5" />}

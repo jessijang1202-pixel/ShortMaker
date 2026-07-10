@@ -253,7 +253,7 @@ export default function SimpleAutoProcess({ onError }: Props) {
                     <AlertTriangle className="w-5 h-5 text-[#F79A4D]" />
                   )}
                   {status === 'running' && (
-                    <Loader2 className="w-5 h-5 text-[#8489F2] animate-spin" />
+                    <Loader2 className="w-5 h-5 text-[var(--brand-primary)] animate-spin" />
                   )}
                   {status === 'pending' && (
                     <div className="w-4 h-4 rounded-full border-2 border-slate-300 dark:border-slate-600" />
@@ -263,7 +263,7 @@ export default function SimpleAutoProcess({ onError }: Props) {
                 <div className="flex-1 min-w-0">
                   <p className={`text-sm font-bold leading-tight ${
                     status === 'done'    ? 'text-[#1E9950] dark:text-[#8BE8AC] line-through' :
-                    status === 'running' ? 'text-[#5157D8] dark:text-[#B4B7F8]' :
+                    status === 'running' ? 'text-[var(--brand-text)] dark:text-[var(--brand-text-dark)]' :
                                           'text-slate-400 dark:text-slate-500'
                   }`}>
                     {task.label}

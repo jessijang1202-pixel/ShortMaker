@@ -27,7 +27,7 @@ export function WizardSidebar({ currentStep, completedSteps, onStepClick }: Wiza
             className={clsx(
               'flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-bold transition-all duration-200 text-left w-full',
               isActive
-                ? 'bg-[#ECEDFD] dark:bg-[#8489F2]/15 text-[#5157D8] dark:text-[#B4B7F8]'
+                ? 'bg-[var(--brand-soft-bg)] dark:bg-[var(--brand-soft-bg-dark)] text-[var(--brand-text)] dark:text-[var(--brand-text-dark)]'
                 : isDone
                   ? 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer'
                   : 'text-slate-400 dark:text-slate-500 cursor-default',
@@ -36,7 +36,7 @@ export function WizardSidebar({ currentStep, completedSteps, onStepClick }: Wiza
             <span className={clsx(
               'flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold shrink-0 transition-all',
               isActive
-                ? 'bg-[#8489F2] text-white'
+                ? 'bg-[var(--brand-primary)] text-[var(--brand-primary-on)]'
                 : isDone
                   ? 'bg-[#8BE8AC] text-[#14351F]'
                   : 'bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500',
@@ -67,7 +67,7 @@ export function WizardTopBar({ currentStep, completedSteps }: WizardProgressProp
       </div>
       <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-1.5">
         <div
-          className="bg-[#8489F2] h-1.5 rounded-full transition-all duration-500"
+          className="bg-[var(--brand-primary)] h-1.5 rounded-full transition-all duration-500"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -82,7 +82,7 @@ export function WizardTopBar({ currentStep, completedSteps }: WizardProgressProp
               title={step.label}
               className={clsx(
                 'shrink-0 rounded-full transition-all duration-200',
-                isActive ? 'w-6 h-2 bg-[#8489F2]' : isDone ? 'w-2 h-2 bg-[#8BE8AC]' : 'w-2 h-2 bg-slate-300 dark:bg-slate-600',
+                isActive ? 'w-6 h-2 bg-[var(--brand-primary)]' : isDone ? 'w-2 h-2 bg-[#8BE8AC]' : 'w-2 h-2 bg-slate-300 dark:bg-slate-600',
               )}
             />
           );
