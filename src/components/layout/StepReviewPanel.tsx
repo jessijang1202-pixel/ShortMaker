@@ -16,96 +16,96 @@ interface ReviewConfig {
 
 const CONFIGS: Partial<Record<WizardStep, ReviewConfig>> = {
   planning: {
-    stepNo: 1, stepTitle: '주제/컨텍스트 확인',
+    stepNo: 1, stepTitle: '주제 확인',
     checks: [
-      { id: 'topic',   label: '주제가 한 문장으로 명확한가?' },
-      { id: 'summary', label: '핵심 메시지가 15초 이내로 요약되는가?' },
+      { id: 'topic',   label: '이 영상의 주제가 한 문장으로 딱 떠오르나요?' },
+      { id: 'summary', label: '하고 싶은 말을 15초 안에 설명할 수 있나요?' },
     ],
-    confirmPrompt: '핵심 메시지를 이 방향으로 진행할까요?',
+    confirmPrompt: '이 방향으로 영상을 만들어도 괜찮을까요?',
     canRegenerate: false,
   },
   ideas: {
-    stepNo: 2, stepTitle: '타겟/키 설정',
+    stepNo: 2, stepTitle: '아이디어 확인',
     checks: [
-      { id: 'target', label: '타겟 청중(연령대/관심사)이 지정되었는가?' },
-      { id: 'key',    label: '키(정보성/유머/감성 등) 프리셋이 선택되었는가?' },
+      { id: 'target', label: '이 영상을 볼 사람이 누구인지 대충 그려지나요? (예: 20대 직장인)' },
+      { id: 'key',    label: '영상 분위기(재미있게? 감동적으로? 등)가 마음에 드나요?' },
     ],
-    confirmPrompt: '선택한 아이디어와 타겟 방향이 맞나요?',
+    confirmPrompt: '선택한 아이디어, 마음에 드시나요?',
     canRegenerate: true,
   },
   hooks: {
-    stepNo: 3, stepTitle: '스크립트 이슈 확인',
+    stepNo: 3, stepTitle: '오프닝 문장 확인',
     checks: [
-      { id: 'hook_place', label: '훅이 첫 3초 안에 배치되어 있는가?' },
-      { id: 'word_count', label: '단어 수가 목표 범위(75~90단어) 안인가?' },
+      { id: 'hook_place', label: '시작하자마자 시선을 확 끄는 느낌인가요?' },
+      { id: 'word_count', label: '20초짜리 영상에 어울리는 분량인가요?' },
     ],
-    confirmPrompt: '이 오프닝 문장이 두 가지입니다. 어느 쪽이 더 끌리나요?',
+    confirmPrompt: '이 오프닝 문장, 마음에 드시나요?',
     canRegenerate: true,
   },
   'script-split': {
-    stepNo: 4, stepTitle: '스크립트 확정',
+    stepNo: 4, stepTitle: '대본 확인',
     checks: [
-      { id: 'info_density', label: '문장당 정보가 하나만 담겨 있는가?' },
-      { id: 'cta',          label: '마지막에 행동 유도 문구(CTA)가 있는가?' },
-      { id: 'copyright',    label: '브랜드명·가사·작품 인용이 없는가?' },
+      { id: 'info_density', label: '한 문장에 이야기가 너무 많이 들어가 있지 않나요?' },
+      { id: 'cta',          label: '마지막에 "좋아요·팔로우" 같은 문구가 들어있나요?' },
+      { id: 'copyright',    label: '다른 브랜드 이름이나 노래 가사가 들어가 있진 않나요?' },
     ],
-    confirmPrompt: '이 대본으로 확정할까요, 수정이 필요한 부분이 있나요?',
+    confirmPrompt: '이 대본 그대로 진행해도 될까요?',
     canRegenerate: true,
   },
   'veo-clip': {
-    stepNo: 5, stepTitle: '씬 분할/스토리보드',
+    stepNo: 5, stepTitle: '도입부 영상 확인',
     checks: [
-      { id: 'scene_map', label: '씬 타이밍이 스크립트 문장 흐름과 논리적으로 맞는가?' },
-      { id: 'source',    label: '영상 소스가 저작권 문제 없이 확보 가능한가?' },
+      { id: 'scene_map', label: '장면들이 대본 흐름과 자연스럽게 이어지나요?' },
+      { id: 'source',    label: '사용한 영상이 저작권 걱정 없이 쓸 수 있는 건가요?' },
     ],
-    confirmPrompt: 'Veo 클립 구성이 자연스러운가요?',
+    confirmPrompt: 'AI가 만든 도입부 영상, 마음에 드시나요?',
     canRegenerate: true,
   },
   slides: {
-    stepNo: 6, stepTitle: '비주얼 소스 선정',
+    stepNo: 6, stepTitle: '사진·이미지 확인',
     checks: [
-      { id: 'source_rights', label: '각 씬 이미지 소스가 저작권 문제 없이 확보 가능한가?' },
-      { id: 'ref_color',     label: '이미지 색감이 레퍼런스(또는 트렌드) 스타일과 어울리는가?' },
+      { id: 'source_rights', label: '사용한 사진이 저작권 걱정 없이 쓸 수 있는 건가요?' },
+      { id: 'ref_color',     label: '사진 색감과 분위기가 참고 영상과 비슷한가요?' },
     ],
-    confirmPrompt: '슬라이드 이미지와 텍스트 구성이 만족스러운가요?',
+    confirmPrompt: '장면별 사진과 문구, 마음에 드시나요?',
     canRegenerate: true,
   },
   'subtitle-narration': {
-    stepNo: 7, stepTitle: '텍스트 오버레이/자막',
+    stepNo: 7, stepTitle: '자막 확인',
     checks: [
-      { id: 'sub_length', label: '씬당 자막 길이가 12자 내외인가?' },
-      { id: 'safe_zone',  label: '세로 화면 safe zone 안에 배치되는가?' },
+      { id: 'sub_length', label: '자막이 한눈에 읽기 좋은 길이인가요? (너무 길지 않게)' },
+      { id: 'safe_zone',  label: '자막이 화면 밖으로 잘리지 않고 잘 보이나요?' },
     ],
-    confirmPrompt: '자막 스타일과 나레이션 설정이 괜찮은가요?',
+    confirmPrompt: '자막 스타일과 목소리 설정, 마음에 드시나요?',
     canRegenerate: false,
   },
   storyboard: {
-    stepNo: 8, stepTitle: '스타일(폰트/컬러) 적용',
+    stepNo: 8, stepTitle: '전체 디자인 확인',
     checks: [
-      { id: 'brand_preset', label: '폰트/컬러/자막 스타일이 지정된 프리셋과 일치하는가?' },
-      { id: 'ref_match',    label: '전체 무드가 레퍼런스(또는 트렌드) 스타일과 일치하는가?' },
+      { id: 'brand_preset', label: '글씨체와 색깔이 처음에 정한 스타일과 잘 맞나요?' },
+      { id: 'ref_match',    label: '전체 분위기가 참고 영상과 비슷하게 나왔나요?' },
     ],
-    confirmPrompt: '전체 스토리보드와 스타일이 마음에 드나요?',
+    confirmPrompt: '완성된 영상 구성, 마음에 드시나요?',
     canRegenerate: false,
   },
   'upload-copy': {
-    stepNo: 9, stepTitle: 'BGM/효과음 적용',
+    stepNo: 9, stepTitle: '업로드 문구 확인',
     checks: [
-      { id: 'bgm_mood', label: '음악 분위기가 콘텐츠 키와 맞는가?' },
-      { id: 'bgm_ref',  label: 'BGM/효과음이 레퍼런스(또는 트렌드) 분위기와 비슷한가?' },
-      { id: 'bgm_key',  label: '이전 영상들과 키가 급격히 다르지 않은가?' },
+      { id: 'bgm_mood', label: '배경음악 분위기가 영상 내용과 잘 어울리나요?' },
+      { id: 'bgm_ref',  label: '음악·효과음이 참고 영상 느낌과 비슷한가요?' },
+      { id: 'bgm_key',  label: '전에 만든 영상들과 분위기가 너무 다르지 않나요?' },
     ],
-    confirmPrompt: '업로드 카피와 해시태그가 플랫폼에 맞게 준비되었나요?',
+    confirmPrompt: '올릴 때 쓸 제목과 해시태그, 마음에 드시나요?',
     canRegenerate: true,
   },
   export: {
-    stepNo: 10, stepTitle: '최종 기술 검증',
+    stepNo: 10, stepTitle: '마지막 점검',
     checks: [
-      { id: 'duration',  label: '최종 길이가 목표 범위 ±10% 안인가?' },
-      { id: 'sub_time',  label: '자막 타이밍이 음성/영상과 맞는가?' },
-      { id: 'platform',  label: '해상도/비트레이트가 플랫폼 기준을 충족하는가?' },
+      { id: 'duration',  label: '완성된 영상 길이가 원했던 길이와 비슷한가요?' },
+      { id: 'sub_time',  label: '자막이 나오는 타이밍이 목소리·영상과 잘 맞나요?' },
+      { id: 'platform',  label: '화질이 유튜브·인스타 등에 올리기에 충분히 선명한가요?' },
     ],
-    confirmPrompt: '모든 항목 확인 후 내보내기를 진행할까요?',
+    confirmPrompt: '이제 영상을 내보내도 될까요?',
     canRegenerate: false,
   },
 };
@@ -148,13 +148,13 @@ export default function StepReviewPanel({ currentStep, onConfirm, onEdit, onRege
             </span>
           </div>
           <h2 className="text-lg font-black leading-tight">{config.stepTitle}</h2>
-          <p className="text-sm text-slate-300 mt-0.5">다음 단계로 이동하기 전에 확인해 주세요</p>
+          <p className="text-sm text-slate-300 mt-0.5">다음으로 넘어가기 전에 잠깐 살펴봐 주세요</p>
         </div>
 
         {/* Checklist */}
         <div className="px-6 py-5 space-y-3">
           <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
-            체크 항목
+            이런 점을 확인해 주세요
           </p>
           {config.checks.map(item => (
             <button
@@ -182,7 +182,7 @@ export default function StepReviewPanel({ currentStep, onConfirm, onEdit, onRege
 
         {/* Confirm prompt */}
         <div className="mx-6 mb-5 bg-[#ECEDFD] dark:bg-[#8489F2]/10 border-2 border-[#C7C9FA] dark:border-[#8489F2]/30 rounded-2xl px-4 py-3">
-          <p className="text-xs font-bold text-[#5157D8] dark:text-[#B4B7F8] mb-1">확인 요청</p>
+          <p className="text-xs font-bold text-[#5157D8] dark:text-[#B4B7F8] mb-1">이렇게 진행할까요?</p>
           <p className="text-sm text-[#3D42B0] dark:text-[#DEDFFC] leading-relaxed">{config.confirmPrompt}</p>
         </div>
 
@@ -199,8 +199,8 @@ export default function StepReviewPanel({ currentStep, onConfirm, onEdit, onRege
             }`}
           >
             <ChevronRight className="w-4 h-4" />
-            승인 — 다음 단계로
-            {!allChecked && <span className="text-xs opacity-70 ml-1">(체크 완료 후 활성화)</span>}
+            네, 다음으로 갈게요
+            {!allChecked && <span className="text-xs opacity-70 ml-1">(위 항목을 모두 확인하면 눌러주세요)</span>}
           </button>
 
           <div className="grid grid-cols-2 gap-2">
@@ -210,7 +210,7 @@ export default function StepReviewPanel({ currentStep, onConfirm, onEdit, onRege
               className="flex items-center justify-center gap-1.5 py-2.5 rounded-2xl border-2 border-slate-200 dark:border-slate-700 text-sm font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
             >
               <Edit3 className="w-3.5 h-3.5" />
-              수정 요청
+              직접 수정할게요
             </button>
 
             {/* 다시 만들기 */}
@@ -220,11 +220,11 @@ export default function StepReviewPanel({ currentStep, onConfirm, onEdit, onRege
                 className="flex items-center justify-center gap-1.5 py-2.5 rounded-2xl border-2 border-[#F79A4D]/40 text-sm font-bold text-[#B0621E] dark:text-[#F79A4D] hover:bg-[#FDEBD7] dark:hover:bg-[#F79A4D]/10 transition-colors"
               >
                 <RefreshCcw className="w-3.5 h-3.5" />
-                다시 만들기
+                다시 만들어줘
               </button>
             ) : (
               <div className="flex items-center justify-center py-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/50 text-xs text-slate-400 dark:text-slate-500">
-                재생성 불가
+                다시 만들 수 없어요
               </div>
             )}
           </div>

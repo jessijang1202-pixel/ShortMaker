@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { ChevronRight, ChevronLeft, Play, Pause, RotateCcw, Video, Image } from 'lucide-react';
 import { useApp } from '../../store/AppContext';
-import type { StoryboardSegment, TextPosition, TextSize } from '../../types';
+import type { StoryboardSegment } from '../../types';
 import Button from '../ui/Button';
 import StoryboardTimeline from '../storyboard/StoryboardTimeline';
+import { subtitlePositionClass, subtitleSizeClass, subtitleStyleProps } from '../../utils/subtitleStyle';
 
 function buildSegments(scriptSplit: NonNullable<ReturnType<typeof useApp>['session']['scriptSplit']>): StoryboardSegment[] {
   const segs: StoryboardSegment[] = [];
@@ -41,23 +42,17 @@ function buildSegments(scriptSplit: NonNullable<ReturnType<typeof useApp>['sessi
   return segs;
 }
 
-function getOverlayPosition(pos: TextPosition | undefined) {
-  if (pos === 'top') return 'top-6';
-  if (pos === 'center') return 'top-1/2 -translate-y-1/2';
-  return 'bottom-6';
-}
-
-function getOverlaySize(size: TextSize | undefined) {
-  if (size === 'large') return 'text-sm font-bold';
-  if (size === 'small') return 'text-[9px] font-medium';
-  return 'text-xs font-semibold';
-}
-
 export default function StoryboardStep() {
   const { session, setStep } = useApp();
   const split = session.scriptSplit;
   const segments = split ? buildSegments(split) : [];
   const totalDuration = segments.length > 0 ? segments[segments.length - 1].endTime : 0;
+
+  // 자막 스타일: 레퍼런스 분석(또는 사용자 설정)을 전 구간에 동일하게 적용.
+  // veo 클립은 개별 위치/크기 지정이 있으면 그것을 우선한다 (고급 모드에서 수동 조정한 경우).
+  const narration = session.subtitleNarration;
+  const subtitleEnabled = narration?.subtitleEnabled ?? true;
+  const subtitleStyle = subtitleStyleProps(narration?.subtitleStyle);
 
   const [activeId, setActiveId] = useState<string | null>(segments[0]?.id ?? null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -137,69 +132,58 @@ export default function StoryboardStep() {
           {/* Content area */}
           {activeSeg ? (
             <>
-              {activeSeg.type === 'veo' ? (
-                activeSeg.videoUrl ? (
-                  <div className="relative w-full h-full">
-                    <video
-                      ref={videoRef}
-                      key={activeSeg.id}
-                      src={activeSeg.videoUrl}
-                      className="w-full h-full object-cover"
-                      loop
-                      muted
-                      playsInline
-                      preload="auto"
-                    />
-                    {/* Script overlay */}
-                    {activeSeg.on_screen_text && (
-                      <div className={`absolute left-0 right-0 px-3 pointer-events-none ${getOverlayPosition(activeSeg.textPosition)}`}>
-                        <p
-                          className={`text-white text-center leading-snug whitespace-pre-line ${getOverlaySize(activeSeg.textSize)}`}
-                          style={{ textShadow: '0 1px 4px rgba(0,0,0,0.9), 0 0 8px rgba(0,0,0,0.6)' }}
-                        >
-                          {activeSeg.on_screen_text}
-                        </p>
-                      </div>
-                    )}
+              {(() => {
+                // 레퍼런스 스타일(또는 사용자 설정)의 위치·크기를 전 구간에 적용.
+                // veo 클립에 수동 지정된 값이 있으면(고급 모드) 그것을 우선한다.
+                const posClass = subtitlePositionClass(activeSeg.textPosition ?? narration?.subtitlePosition);
+                const sizeClass = subtitleSizeClass(activeSeg.textSize ?? narration?.subtitleSize);
+                const caption = subtitleEnabled && activeSeg.on_screen_text ? (
+                  <div className={`absolute left-0 right-0 px-3 pointer-events-none ${posClass}`}>
+                    <p
+                      className={`text-white text-center leading-snug whitespace-pre-line ${sizeClass}`}
+                      style={subtitleStyle}
+                    >
+                      {activeSeg.on_screen_text}
+                    </p>
                   </div>
-                ) : (
-                  <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-b from-blue-900 to-blue-950 relative">
-                    <Video className="w-10 h-10 text-blue-400 mb-3" />
-                    <p className="text-xs text-blue-300 text-center px-3">초반부 영상 ({split.veo_core_clip.duration}초)</p>
-                    {/* Script overlay even without video */}
-                    {activeSeg.on_screen_text && (
-                      <div className={`absolute left-0 right-0 px-3 pointer-events-none ${getOverlayPosition(activeSeg.textPosition)}`}>
-                        <p
-                          className={`text-white text-center leading-snug whitespace-pre-line ${getOverlaySize(activeSeg.textSize)}`}
-                          style={{ textShadow: '0 1px 3px rgba(0,0,0,0.9)' }}
-                        >
-                          {activeSeg.on_screen_text}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                )
-              ) : (
-                activeSeg.imageUrl ? (
+                ) : null;
+
+                if (activeSeg.type === 'veo') {
+                  return activeSeg.videoUrl ? (
+                    <div className="relative w-full h-full">
+                      <video
+                        ref={videoRef}
+                        key={activeSeg.id}
+                        src={activeSeg.videoUrl}
+                        className="w-full h-full object-cover"
+                        loop
+                        muted
+                        playsInline
+                        preload="auto"
+                      />
+                      {caption}
+                    </div>
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-b from-blue-900 to-blue-950 relative">
+                      <Video className="w-10 h-10 text-blue-400 mb-3" />
+                      <p className="text-xs text-blue-300 text-center px-3">초반부 영상 ({split.veo_core_clip.duration}초)</p>
+                      {caption}
+                    </div>
+                  );
+                }
+
+                return activeSeg.imageUrl ? (
                   <div className="w-full h-full relative">
                     <img src={activeSeg.imageUrl} alt={activeSeg.label} className="w-full h-full object-cover" />
-                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent px-4 pb-6 pt-8">
-                      <p className="text-white text-center font-bold text-xs leading-snug whitespace-pre-line">
-                        {activeSeg.on_screen_text}
-                      </p>
-                    </div>
+                    {caption}
                   </div>
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-b from-amber-900 to-amber-950 relative">
                     <Image className="w-8 h-8 text-amber-400 mb-3" />
-                    <div className="absolute bottom-0 left-0 right-0 px-3 pb-4">
-                      <p className="text-white text-center font-bold text-xs leading-snug whitespace-pre-line">
-                        {activeSeg.on_screen_text}
-                      </p>
-                    </div>
+                    {caption}
                   </div>
-                )
-              )}
+                );
+              })()}
 
               {/* Segment type badge */}
               <div className={`absolute top-8 left-2 px-2 py-0.5 rounded-full text-[10px] font-bold z-10

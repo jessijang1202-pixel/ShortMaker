@@ -6,6 +6,7 @@ import type {
   TextPosition, TextSize, SubtitleStyle,
 } from '../../types';
 import Button from '../ui/Button';
+import { subtitlePositionClass, subtitleSizeClass, subtitleStyleProps } from '../../utils/subtitleStyle';
 
 // ─── Static data ───────────────────────────────────────────────────────────────
 
@@ -69,23 +70,23 @@ function Toggle({ on, onChange, color = 'blue' }: {
   );
 }
 
-function subtitleInlineStyle(style: SubtitleStyle): React.CSSProperties {
-  if (style === 'outline')
-    return { textShadow: '-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000' };
-  if (style === 'shadow')
-    return { textShadow: '2px 2px 6px rgba(0,0,0,0.9)' };
-  if (style === 'bold')
-    return { fontWeight: 900 };
-  return {};
-}
-
 // ─── Main Component ────────────────────────────────────────────────────────────
 
 export default function SubtitleNarrationStep() {
   const { session, setStep, setSubtitleNarration, reference } = useApp();
-  const [cfg, setCfg] = useState<SubtitleNarrationSettings>(
-    session.subtitleNarration ?? DEFAULT_SETTINGS
-  );
+  const [cfg, setCfg] = useState<SubtitleNarrationSettings>(() => {
+    if (session.subtitleNarration) return session.subtitleNarration;
+    // 레퍼런스 분석이 있으면 그 스타일을 기본값으로 미리 채워준다
+    if (reference.analysis) {
+      return {
+        ...DEFAULT_SETTINGS,
+        subtitlePosition: reference.analysis.subtitle.position,
+        subtitleSize: reference.analysis.subtitle.size,
+        subtitleStyle: reference.analysis.subtitle.style,
+      };
+    }
+    return DEFAULT_SETTINGS;
+  });
 
   function set<K extends keyof SubtitleNarrationSettings>(key: K, value: SubtitleNarrationSettings[K]) {
     setCfg(prev => ({ ...prev, [key]: value }));
@@ -98,14 +99,8 @@ export default function SubtitleNarrationStep() {
 
   // ── Derived ───────────────────────────────────────────────────────────────
 
-  const previewPos =
-    cfg.subtitlePosition === 'top'    ? 'top-3' :
-    cfg.subtitlePosition === 'center' ? 'top-1/2 -translate-y-1/2' :
-                                        'bottom-3';
-  const previewSize =
-    cfg.subtitleSize === 'large'  ? 'text-lg font-bold' :
-    cfg.subtitleSize === 'medium' ? 'text-sm font-semibold' :
-                                    'text-xs font-medium';
+  const previewPos = subtitlePositionClass(cfg.subtitlePosition);
+  const previewSize = subtitleSizeClass(cfg.subtitleSize);
 
   return (
     <div className="space-y-6 fade-in">
@@ -172,7 +167,7 @@ export default function SubtitleNarrationStep() {
                 <div className={`absolute left-0 right-0 px-4 text-center ${previewPos}`}>
                   <span
                     className={`text-white ${previewSize}`}
-                    style={subtitleInlineStyle(cfg.subtitleStyle)}
+                    style={subtitleStyleProps(cfg.subtitleStyle)}
                   >
                     자막 텍스트가 여기에 표시됩니다
                   </span>
