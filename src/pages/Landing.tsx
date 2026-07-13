@@ -1,7 +1,9 @@
-import { Sparkles, Clock, Wand2, Film, Lock } from 'lucide-react';
+import { Sparkles, Clock, Wand2, Film, ShoppingBag } from 'lucide-react';
 
 // ─── Brand palette (Home.tsx와 동일) ──────────────────────────────────────────
 // mint  #8BE8AC · periwinkle #8489F2 · orange #F79A4D · ink #241E3C
+
+const PAYMENT_URL = 'https://www.groble.im/payment/gXWTv4';
 
 const POINTS = [
   {
@@ -73,18 +75,18 @@ export default function Landing() {
           <p className="text-xs text-[#E3E4FD] font-medium">평생 소장 · 추가 결제 없음</p>
         </div>
 
-        {/* 구매하기 버튼 — 결제 연결 준비 전까지 비활성 */}
-        <button
-          type="button"
-          disabled
-          aria-disabled="true"
-          className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 font-bold text-base cursor-not-allowed select-none"
+        {/* 구매하기 버튼 — 그로블 결제 링크 연결됨 */}
+        <a
+          href={PAYMENT_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl bg-[#8489F2] hover:bg-[#6D72E0] text-white font-bold text-base shadow-[0_8px_30px_rgba(132,137,242,0.45)] hover:shadow-[0_12px_40px_rgba(132,137,242,0.65)] transition-all active:scale-[0.98]"
         >
-          <Lock className="w-4 h-4" />
-          결제 연결 준비 중
-        </button>
+          <ShoppingBag className="w-4 h-4" />
+          구매하기
+        </a>
         <p className="text-center text-xs text-slate-400 dark:text-slate-600 mt-3">
-          결제 연결이 완료되면 이 버튼으로 바로 구매할 수 있어요
+          그로블 결제 페이지로 이동합니다
         </p>
 
       </div>
