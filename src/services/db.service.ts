@@ -74,16 +74,23 @@ export async function saveProject(
 }
 
 export async function listProjects(): Promise<SavedProject[]> {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('로그인이 필요합니다.');
+
   const { data, error } = await supabase
     .from('projects')
     .select('id, title, description, full_script, current_step, created_at, updated_at, session_data')
+    .eq('user_id', user.id)
     .order('updated_at', { ascending: false });
   if (error) throw new Error(error.message);
   return (data ?? []) as SavedProject[];
 }
 
 export async function deleteProject(id: string): Promise<void> {
-  const { error } = await supabase.from('projects').delete().eq('id', id);
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('로그인이 필요합니다.');
+
+  const { error } = await supabase.from('projects').delete().eq('id', id).eq('user_id', user.id);
   if (error) throw new Error(error.message);
 }
 
