@@ -107,7 +107,7 @@ export default function Landing() {
             <Link 
               to="/" 
               id="header_demo_btn"
-              className="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+              className="hidden sm:inline-block text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
             >
               데모 체험
             </Link>
@@ -116,7 +116,7 @@ export default function Landing() {
             <button 
               onClick={toggleDark} 
               id="theme_toggle_btn"
-              className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/10 transition-colors"
+              className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-white/10 transition-colors shrink-0"
               aria-label={isDark ? '라이트 모드' : '다크 모드'}
             >
               {isDark ? <Sun className="w-4 h-4 text-amber-400 animate-pulse" /> : <Moon className="w-4 h-4 text-slate-500" />}
@@ -127,10 +127,11 @@ export default function Landing() {
               target="_blank"
               rel="noopener noreferrer"
               id="header_buy_btn"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#241E3C] dark:bg-white text-white dark:text-slate-950 text-xs font-bold hover:bg-[#1b172e] dark:hover:bg-slate-100 transition-colors shadow-md"
+              className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-[#241E3C] dark:bg-white text-white dark:text-slate-950 text-xs font-bold hover:bg-[#1b172e] dark:hover:bg-slate-100 transition-colors shadow-md shrink-0"
             >
               <ShoppingBag className="w-3.5 h-3.5" />
-              지금 구매하기
+              <span className="hidden sm:inline">지금 구매하기</span>
+              <span className="sm:hidden">구매</span>
             </a>
           </div>
         </div>
@@ -149,12 +150,12 @@ export default function Landing() {
 
         {/* Hero Title */}
         <section className="text-center max-w-3xl mb-16 slide-up">
-          <h1 className="text-5xl sm:text-7xl font-extrabold tracking-tight leading-none mb-6 text-slate-900 dark:text-white transition-colors">
+          <h1 className="text-3xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-tight mb-6 text-slate-900 dark:text-white transition-colors whitespace-nowrap sm:whitespace-normal">
             숏폼 제작소 <span className="bg-gradient-to-r from-[#8BE8AC] via-[#8489F2] to-[#F79A4D] bg-clip-text text-transparent">SnapReel</span>
           </h1>
-          <p className="text-lg sm:text-xl font-medium text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto transition-colors">
+          <p className="text-sm sm:text-lg md:text-xl font-medium text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto transition-colors break-keep">
             매번 머리 싸매며 대본을 고민하고 영상 편집에 시간을 낭비하고 계신가요? 
-            <br />
+            <br className="hidden sm:inline" />
             <span className="text-slate-950 dark:text-white font-bold underline decoration-[#8BE8AC] decoration-2 underline-offset-4 transition-colors">
               레퍼런스 영상 하나면 AI 제시카가 30초 숏폼을 완성
             </span>
