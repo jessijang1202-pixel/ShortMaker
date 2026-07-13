@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Wizard from './pages/Wizard';
 import Settings from './pages/Settings';
 import LoginPage from './pages/LoginPage';
+import Landing from './pages/Landing';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, authLoading } = useAuth();
@@ -24,6 +25,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/landing" element={<Landing />} />
       <Route element={<AppLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/wizard" element={<ProtectedRoute><Wizard /></ProtectedRoute>} />
