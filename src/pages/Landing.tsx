@@ -186,7 +186,7 @@ export default function Landing() {
 
         {/* Video Mockup Frame */}
         <section className="w-full max-w-4xl mb-24 relative slide-up">
-          <div className="aspect-[16/9] w-full rounded-[2.5rem] bg-slate-100 dark:bg-gradient-to-br dark:from-white/10 dark:to-white/5 border border-slate-300 dark:border-white/10 p-4 shadow-xl dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden flex items-center justify-center transition-colors">
+          <div className="aspect-[16/9] w-full rounded-[2.5rem] bg-slate-100 dark:bg-slate-900 dark:bg-gradient-to-br dark:from-white/10 dark:to-white/5 border border-slate-300 dark:border-white/10 p-4 shadow-xl dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden flex items-center justify-center transition-colors">
             
             {/* Phone Overlay inside Mockup */}
             <div className="flex w-full h-full gap-6 items-center justify-center px-4 sm:px-12">
@@ -317,7 +317,7 @@ export default function Landing() {
         </section>
 
         {/* Value Proposition Statistics */}
-        <section className="w-full max-w-4xl bg-white dark:bg-gradient-to-r dark:from-[#8489F2]/10 dark:to-[#8BE8AC]/10 border border-slate-200 dark:border-white/10 rounded-[2.5rem] p-8 sm:p-12 mb-28 text-center shadow-sm dark:shadow-none transition-colors">
+        <section className="w-full max-w-4xl bg-white dark:bg-[#1a182c] dark:bg-gradient-to-r dark:from-[#8489F2]/10 dark:to-[#8BE8AC]/10 border border-slate-200 dark:border-white/10 rounded-[2.5rem] p-8 sm:p-12 mb-28 text-center shadow-sm dark:shadow-none transition-colors">
           <div className="grid grid-cols-3 gap-6 divide-x divide-slate-200 dark:divide-white/10">
             <div>
               <p className="text-4xl sm:text-5xl font-black text-slate-900 dark:text-white transition-colors">95%</p>
@@ -335,7 +335,7 @@ export default function Landing() {
         </section>
 
         {/* Pricing Card */}
-        <section className="w-full max-w-md bg-white dark:bg-gradient-to-b dark:from-white/10 dark:to-white/5 border border-slate-200 dark:border-white/15 rounded-[2.5rem] p-8 sm:p-10 text-center shadow-xl dark:shadow-2xl relative overflow-hidden mb-28 transition-colors">
+        <section className="w-full max-w-md bg-white dark:bg-[#1a182c] dark:bg-gradient-to-b dark:from-white/10 dark:to-white/5 border border-slate-200 dark:border-white/15 rounded-[2.5rem] p-8 sm:p-10 text-center shadow-xl dark:shadow-2xl relative overflow-hidden mb-28 transition-colors">
           <div className="absolute -right-16 -top-16 w-32 h-32 bg-[#8489F2]/10 dark:bg-[#8489F2]/20 rounded-full blur-2xl transition-colors" />
           <div className="absolute -left-16 -bottom-16 w-32 h-32 bg-[#8BE8AC]/10 dark:bg-[#8BE8AC]/20 rounded-full blur-2xl transition-colors" />
 
