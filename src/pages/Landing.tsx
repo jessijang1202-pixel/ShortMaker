@@ -273,7 +273,7 @@ export default function Landing() {
         {/* Features / Value Grid */}
         <section className="w-full max-w-5xl mb-28">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-4 transition-colors">크리에이팅의 패러다임을 바꾸는 AI</h2>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-4 transition-colors break-keep">크리에이팅의 패러다임을 바꾸는 AI</h2>
             <p className="text-slate-500 dark:text-slate-400 text-sm sm:text-base transition-colors">지루한 노가다는 제시카에게 맡기고 콘텐츠 컨셉에만 집중하세요.</p>
           </div>
           <div className="grid sm:grid-cols-3 gap-6">
@@ -295,7 +295,7 @@ export default function Landing() {
         {/* 3 Steps Process */}
         <section className="w-full max-w-5xl mb-28">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-4 transition-colors">단 3단계로 끝나는 제작 흐름</h2>
+            <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white mb-4 transition-colors break-keep">단 3단계로 끝나는 제작 흐름</h2>
             <p className="text-slate-500 dark:text-slate-400 text-sm sm:text-base transition-colors">복잡한 영상 편집 툴을 켤 필요가 없습니다.</p>
           </div>
           <div className="grid sm:grid-cols-3 gap-8 relative">
@@ -386,7 +386,7 @@ export default function Landing() {
         {/* FAQ Section */}
         <section className="w-full max-w-3xl mb-24">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white transition-colors">자주 묻는 질문</h2>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white transition-colors">자주 묻는 질문</h2>
           </div>
           <div className="space-y-4">
             {FAQS.map((faq, idx) => {
